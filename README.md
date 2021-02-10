@@ -1,3 +1,2 @@
 # Bachelor-project
-Robot collaborative navigationinspired by tandem runningbehaviour in ants
- this is a test
+Robot collaborative navigation inspired by tandem running behaviour in ants
