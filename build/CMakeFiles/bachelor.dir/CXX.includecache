@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/HenningCasper/Bachelor-project/controller.h
+iostream
+-
+unistd.h
+-
+matrix_hal/gpio_control.h
+-
+matrix_hal/matrixio_bus.h
+-
+pigpio.h
+-
+cmath
+-
+
+/home/pi/HenningCasper/Bachelor-project/main.cpp
+controller.h
+/home/pi/HenningCasper/Bachelor-project/controller.h
+

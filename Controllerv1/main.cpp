@@ -48,7 +48,7 @@ void setLeftMotorSpeedDirection(matrix_hal::GPIOControl* gpio, int speed, int di
 // Directiom -> 1 = forward, 0 = reverse
 // Speed -> 0-100% in steps of 1%
 void setRightMotorSpeedDirection(matrix_hal::GPIOControl* gpio, int speed, int dir);
-// setup Matrix-hal
+
 
 
 

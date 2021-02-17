@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/bachelor.dir/main.cpp.o CMakeFiles/bachelor.dir/controller.cpp.o  -o bachelor -lmatrix_creator_hal 
