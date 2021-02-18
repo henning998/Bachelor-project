@@ -1,17 +1,17 @@
 [
 {
   "directory": "/home/pi/HenningCasper/Bachelor-project/build",
-  "command": "/usr/bin/c++    -g   -o CMakeFiles/bachelor.dir/main.cpp.o -c /home/pi/HenningCasper/Bachelor-project/main.cpp",
+  "command": "/usr/bin/c++   -isystem /usr/local/include/opencv4  -g   -std=gnu++11 -o CMakeFiles/bachelor.dir/main.cpp.o -c /home/pi/HenningCasper/Bachelor-project/main.cpp",
   "file": "/home/pi/HenningCasper/Bachelor-project/main.cpp"
 },
 {
   "directory": "/home/pi/HenningCasper/Bachelor-project/build",
-  "command": "/usr/bin/c++    -g   -o CMakeFiles/bachelor.dir/controller.cpp.o -c /home/pi/HenningCasper/Bachelor-project/controller.cpp",
+  "command": "/usr/bin/c++   -isystem /usr/local/include/opencv4  -g   -std=gnu++11 -o CMakeFiles/bachelor.dir/controller.cpp.o -c /home/pi/HenningCasper/Bachelor-project/controller.cpp",
   "file": "/home/pi/HenningCasper/Bachelor-project/controller.cpp"
 },
 {
   "directory": "/home/pi/HenningCasper/Bachelor-project/build",
-  "command": "/usr/bin/c++    -g   -o CMakeFiles/bachelor.dir/Braitenberg.cpp.o -c /home/pi/HenningCasper/Bachelor-project/Braitenberg.cpp",
+  "command": "/usr/bin/c++   -isystem /usr/local/include/opencv4  -g   -std=gnu++11 -o CMakeFiles/bachelor.dir/Braitenberg.cpp.o -c /home/pi/HenningCasper/Bachelor-project/Braitenberg.cpp",
   "file": "/home/pi/HenningCasper/Bachelor-project/Braitenberg.cpp"
 }
 ]
