@@ -1,1 +1,0 @@
-/usr/bin/g++-8  -g  -rdynamic CMakeFiles/cmakelist.dir/main.cpp.o  -o cmakelist -lopencv_core -lopencv_features2d -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lraspicam 
