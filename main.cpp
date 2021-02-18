@@ -15,4 +15,8 @@ Braitenberg test;
 test.love(0,0);
 usleep(1000000);
 test.love(1,1);
+usleep(1000000);
+test.turn180();
+usleep(1000000);
+test.turn180();
 }

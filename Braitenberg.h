@@ -19,6 +19,8 @@ public:
     void explorer(float left, float right);// input between 0-1
     //love left sensor -> (+) right motor , right sensor -> (+) left motor
     void agression(float left, float right);// input between 0-1
+    
+    void turn180();
 };
 
 

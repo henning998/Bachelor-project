@@ -50,3 +50,12 @@ void Braitenberg::agression(float left, float right)// input between 0-1
     Motor.setLeftMotorSpeedDirection(SpeedL,forward);
     Motor.setRightMotorSpeedDirection(SpeedR,forward);
 }
+
+void Braitenberg::turn180()
+{
+    Motor.setLeftMotorSpeedDirection(20,forward);
+    Motor.setRightMotorSpeedDirection(20,backward);
+    usleep(2600000); // 2,6 sec calculated with trail and error battery 90%-100%
+    Motor.setLeftMotorSpeedDirection(0,forward);
+    Motor.setRightMotorSpeedDirection(0,backward);
+}
