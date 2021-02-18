@@ -14,5 +14,4 @@
 #include <opencv2/core/ocl.hpp>
 
 #include "camera.h"
-#include "blob.h"
-
+#include "Braitenberg.h"

@@ -1,123 +1,82 @@
 #include "include.h"
 
-//using namespace std;
-//using namespace cv;
-
 int main (int argc, char** argv)
 {
-	// Create Raspberry Pi camera object
-	raspicam::RaspiCam Camera;
+  camera Camera;
+
+
+
+  enum goal {blue, red};
+  goal goal = red;
+  Braitenberg braitenberg;
 	
-	printParameter(Camera);
-
-	cv::SimpleBlobDetector::Params sbdPara;
-	
-	BlobSetup(1, 1000, true, 255, true, 10000, 160000, &sbdPara);
-
-	setupCamera(640, 480, true, true, &Camera);
-
-	cv::Ptr<cv::SimpleBlobDetector> sbd = cv::SimpleBlobDetector::create(sbdPara);
-	std::vector<cv::KeyPoint> keypts;
-
-	// Open camera
-	if (!Camera.open())
-	{
-		std::cerr << "Error opening camera." << std::endl;
-		return -1;
-	}
-
-	// Wait 3 seconds for camera image to stabilise
-	std::cout << "Waiting for camera stabilisation...";
-	usleep(3000000);
-	std::cout << "done" << std::endl;
-
-	// Create buffer of correct size to store image data
-	int img_buf_len = Camera.getImageTypeSize(raspicam::RASPICAM_FORMAT_BGR);
-	unsigned char *img_buf=new unsigned char[img_buf_len];
-
-	// Set minimum and maximum values for hue, saturation and value
- 	int iLowH = 170;
- 	int iHighH = 179;
-
-	int iLowS = 0;
- 	int iHighS = 255;
-
- 	int iLowV = 0;
- 	int iHighV = 255;
-
-	// Create a window
-	cv::namedWindow("HSV controls",cv::WINDOW_NORMAL);
-
-	// Create trackbars for H, S and V in the window
-	cv::createTrackbar("LowH", "HSV controls", &iLowH, 179); //Hue (0 - 179)
- 	cv::createTrackbar("HighH", "HSV controls", &iHighH, 179);
-
- 	cv::createTrackbar("LowS", "HSV controls", &iLowS, 255); //Saturation (0 - 255)
- 	cv::createTrackbar("HighS", "HSV controls", &iHighS, 255);
-
- 	cv::createTrackbar("LowV", "HSV controls", &iLowV, 255); //Value (0 - 255)
- 	cv::createTrackbar("HighV", "HSV controls", &iHighV, 255);
 
 	while(true)
 	{
-	// Grab image into internal buffer
-	Camera.grab();
+    Camera.getpicture();
 
-	// Copy latest camera buffer into our buffer
-	Camera.retrieve(img_buf);
 
-	// Create OpenCV Mat image from image buffer
-	cv::Mat imageMat = cv::Mat(Camera.getHeight(),Camera.getWidth(),CV_8UC3,img_buf);
+  
+  if(Camera.size>0.85)
+  {
+    braitenberg.stop();
+    usleep(100000);
+    Camera.size = 0;
+    if (goal == blue)
+    {
+      // iLowH = 160;
+ 	    // iHighH = 175;
 
-	if (!imageMat.data)
-	{
-		std::cout << "No data in Mat imageMat." << std::endl;
-		return -1;
-	}
+	    // iLowS = 60;
+ 	    // iHighS = 230;
 
-	// Convert image from BGR to HSV
-	cv::cvtColor(imageMat,imageMat,cv::COLOR_BGR2HSV);
+ 	    // iLowV = 0;
+ 	    // iHighV = 255;
 
-	// Create new image Mat that holds the thresholded image data
-	cv::Mat imageThreshold;
-	// Threshold image
-	cv::inRange(imageMat,cv::Scalar(iLowH,iLowS,iLowV),cv::Scalar(iHighH,iHighS,iHighV),imageThreshold);
+       goal = red;
 
-	//morphological opening (remove small objects from the foreground)
-	erode(imageThreshold, imageThreshold, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)) );
-	dilate(imageThreshold, imageThreshold, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)) );
+       braitenberg.turn180();
+       usleep(100000);
+    }
+    else if (goal == red)
+    {
+      // iLowH = 100;
+ 	    // iHighH = 110;
 
-	//morphological closing (fill small holes in the foreground)
-	dilate(imageThreshold, imageThreshold, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)) );
- 	erode(imageThreshold, imageThreshold, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)) );
+	    // iLowS = 90;
+ 	    // iHighS = 230;
 
-	// Create window and display OpenCV Mat image
-	cv::namedWindow("HSV image",cv::WINDOW_AUTOSIZE);
-	cv::imshow("HSV image", imageMat);
+ 	    // iLowV = 0;
+ 	    // iHighV = 255;
 
-	// Display thresholded image, window is automatically created
-	cv::namedWindow("Thresholded image",cv::WINDOW_AUTOSIZE);
-	cv::imshow("Thresholded image",imageThreshold);
+       goal = blue;
 
-	cv::Mat imageKeypoints;
+       braitenberg.turn180();
+       usleep(100000);
+    }
 
-	sbd->detect(imageThreshold,keypts);
-
-	cv::drawKeypoints(imageThreshold,keypts,imageKeypoints,cv::Scalar(0,0,255),cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-
-	cv::namedWindow("Blobs",cv::WINDOW_AUTOSIZE);
-	cv::imshow("Blobs",imageKeypoints);
-
-	std::vector<cv::Point2f> keyptXY;
-	cv::KeyPoint::convert(keypts,keyptXY);
-
-	if (keyptXY.size() == 1)
-		std::cout << "[x,y] = " << "[" << keyptXY.front().x << "," << keyptXY.front().y << "]" << std::endl;
+    
+  }
+ float left,right;
+  if (Camera.x <300)
+  {
+    left = (300-Camera.x )/300;
+    right = 0;
+  }
+  if (Camera.x > 340)
+  {
+    left = 0;
+    right = (Camera.x -340)/300;
+  }
+  
+    braitenberg.love(left,right,Camera.size);
 
 	if (cv::waitKey(30) == 27)
 	{
 		// Release camera resources
-		Camera.release();
+      controller test;
+  test.setLeftMotorSpeedDirection(0,0);
+  test.setRightMotorSpeedDirection(0,0);
 		break;
 	}
 	}
