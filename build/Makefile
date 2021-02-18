@@ -520,6 +520,33 @@ ExperimentalConfigure/fast:
 	$(MAKE) -f CMakeFiles/ExperimentalConfigure.dir/build.make CMakeFiles/ExperimentalConfigure.dir/build
 .PHONY : ExperimentalConfigure/fast
 
+Braitenberg.o: Braitenberg.cpp.o
+
+.PHONY : Braitenberg.o
+
+# target to build an object file
+Braitenberg.cpp.o:
+	$(MAKE) -f CMakeFiles/bachelor.dir/build.make CMakeFiles/bachelor.dir/Braitenberg.cpp.o
+.PHONY : Braitenberg.cpp.o
+
+Braitenberg.i: Braitenberg.cpp.i
+
+.PHONY : Braitenberg.i
+
+# target to preprocess a source file
+Braitenberg.cpp.i:
+	$(MAKE) -f CMakeFiles/bachelor.dir/build.make CMakeFiles/bachelor.dir/Braitenberg.cpp.i
+.PHONY : Braitenberg.cpp.i
+
+Braitenberg.s: Braitenberg.cpp.s
+
+.PHONY : Braitenberg.s
+
+# target to generate assembly for a file
+Braitenberg.cpp.s:
+	$(MAKE) -f CMakeFiles/bachelor.dir/build.make CMakeFiles/bachelor.dir/Braitenberg.cpp.s
+.PHONY : Braitenberg.cpp.s
+
 controller.o: controller.cpp.o
 
 .PHONY : controller.o
@@ -614,6 +641,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... ExperimentalUpdate"
 	@echo "... ExperimentalConfigure"
+	@echo "... Braitenberg.o"
+	@echo "... Braitenberg.i"
+	@echo "... Braitenberg.s"
 	@echo "... controller.o"
 	@echo "... controller.i"
 	@echo "... controller.s"

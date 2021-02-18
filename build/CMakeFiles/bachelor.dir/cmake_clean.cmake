@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/bachelor.dir/main.cpp.o"
   "CMakeFiles/bachelor.dir/controller.cpp.o"
+  "CMakeFiles/bachelor.dir/Braitenberg.cpp.o"
   "bachelor.pdb"
   "bachelor"
 )

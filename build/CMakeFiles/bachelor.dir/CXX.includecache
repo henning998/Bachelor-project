@@ -6,6 +6,14 @@
 
 #IncludeRegexTransform: 
 
+/home/pi/HenningCasper/Bachelor-project/Braitenberg.cpp
+Braitenberg.h
+/home/pi/HenningCasper/Bachelor-project/Braitenberg.h
+
+/home/pi/HenningCasper/Bachelor-project/Braitenberg.h
+controller.h
+/home/pi/HenningCasper/Bachelor-project/controller.h
+
 /home/pi/HenningCasper/Bachelor-project/controller.h
 iostream
 -
@@ -21,6 +29,6 @@ cmath
 -
 
 /home/pi/HenningCasper/Bachelor-project/main.cpp
-controller.h
-/home/pi/HenningCasper/Bachelor-project/controller.h
+Braitenberg.h
+/home/pi/HenningCasper/Bachelor-project/Braitenberg.h
 
