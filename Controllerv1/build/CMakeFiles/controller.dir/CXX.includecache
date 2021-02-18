@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/HenningCasper/Controllerv1/main.cpp
+iostream
+-
+unistd.h
+-
+matrix_hal/gpio_control.h
+-
+matrix_hal/matrixio_bus.h
+-
+pigpio.h
+-
+cmath
+-
+stdlib.h
+-
+

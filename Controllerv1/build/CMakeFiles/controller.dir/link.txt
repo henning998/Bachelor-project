@@ -1,0 +1,1 @@
+/usr/bin/arm-linux-gnueabihf-g++-8  -g  -rdynamic CMakeFiles/controller.dir/main.cpp.o  -o controller -lmatrix_creator_hal 

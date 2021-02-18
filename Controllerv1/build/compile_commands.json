@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/pi/HenningCasper/Controllerv1/build",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++-8    -g   -o CMakeFiles/controller.dir/main.cpp.o -c /home/pi/HenningCasper/Controllerv1/main.cpp",
+  "file": "/home/pi/HenningCasper/Controllerv1/main.cpp"
+}
+]
