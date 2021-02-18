@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/pi/Desktop/Casper_og_Henning/Bachelor-project/build",
+  "command": "/usr/bin/g++-8   -isystem /usr/local/include/opencv4  -g   -std=gnu++11 -o CMakeFiles/BachelorProject.dir/main.cpp.o -c /home/pi/Desktop/Casper_og_Henning/Bachelor-project/main.cpp",
+  "file": "/home/pi/Desktop/Casper_og_Henning/Bachelor-project/main.cpp"
+}
+]
