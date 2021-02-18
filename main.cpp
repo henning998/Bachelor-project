@@ -12,7 +12,7 @@ int main (int argc, char** argv)
 
 	cv::SimpleBlobDetector::Params sbdPara;
 	
-	BlobSetup(1, 1000, true, 255, true, 10000, 160000, sbdPara);
+	BlobSetup(1, 1000, true, 255, true, 10000, 160000, &sbdPara);
 
 	setupCamera(640, 480, true, true, &Camera);
 
@@ -36,9 +36,27 @@ int main (int argc, char** argv)
 	unsigned char *img_buf=new unsigned char[img_buf_len];
 
 	// Set minimum and maximum values for hue, saturation and value
-	std::vector<int> HSV_vector = {170, 179, 0, 255, 0 ,255};
+ 	int iLowH = 170;
+ 	int iHighH = 179;
 
-	HSV(HSV_vector); 
+	int iLowS = 0;
+ 	int iHighS = 255;
+
+ 	int iLowV = 0;
+ 	int iHighV = 255;
+
+	// Create a window
+	cv::namedWindow("HSV controls",cv::WINDOW_NORMAL);
+
+	// Create trackbars for H, S and V in the window
+	cv::createTrackbar("LowH", "HSV controls", &iLowH, 179); //Hue (0 - 179)
+ 	cv::createTrackbar("HighH", "HSV controls", &iHighH, 179);
+
+ 	cv::createTrackbar("LowS", "HSV controls", &iLowS, 255); //Saturation (0 - 255)
+ 	cv::createTrackbar("HighS", "HSV controls", &iHighS, 255);
+
+ 	cv::createTrackbar("LowV", "HSV controls", &iLowV, 255); //Value (0 - 255)
+ 	cv::createTrackbar("HighV", "HSV controls", &iHighV, 255);
 
 	while(true)
 	{
@@ -63,7 +81,7 @@ int main (int argc, char** argv)
 	// Create new image Mat that holds the thresholded image data
 	cv::Mat imageThreshold;
 	// Threshold image
-	cv::inRange(imageMat,cv::Scalar(HSV_vector[0],HSV_vector[2],HSV_vector[4]),cv::Scalar(HSV_vector[1],HSV_vector[3],HSV_vector[5]),imageThreshold);
+	cv::inRange(imageMat,cv::Scalar(iLowH,iLowS,iLowV),cv::Scalar(iHighH,iHighS,iHighV),imageThreshold);
 
 	//morphological opening (remove small objects from the foreground)
 	erode(imageThreshold, imageThreshold, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)) );
