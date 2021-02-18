@@ -39,6 +39,8 @@ opencv2/imgproc.hpp
 -
 opencv2/features2d.hpp
 -
+opencv2/core/ocl.hpp
+-
 camera.h
 /home/pi/Desktop/Casper_og_Henning/Bachelor-project/camera.h
 blob.h
@@ -283,6 +285,10 @@ initializer_list
 /usr/local/include/opencv4/opencv2/core/neon_utils.hpp
 opencv2/core/cvdef.h
 /usr/local/include/opencv4/opencv2/core/opencv2/core/cvdef.h
+
+/usr/local/include/opencv4/opencv2/core/ocl.hpp
+opencv2/core.hpp
+/usr/local/include/opencv4/opencv2/core/opencv2/core.hpp
 
 /usr/local/include/opencv4/opencv2/core/operations.hpp
 cstdio
