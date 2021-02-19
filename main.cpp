@@ -1,85 +1,67 @@
 #include "include.h"
 
-int main (int argc, char** argv)
+int main(int argc, char **argv)
 {
   camera Camera;
-
-
-
-  enum goal {blue, red};
+  
+  enum goal
+  {
+    blue,
+    red
+  };
   goal goal = red;
   Braitenberg braitenberg;
-	
 
-	while(true)
-	{
+  while (true)
+  {
     Camera.getpicture();
 
-
-  
-  if(Camera.size>0.85)
-  {
-    braitenberg.stop();
-    usleep(100000);
-    Camera.size = 0;
-    if (goal == blue)
+    if (Camera.size > 0.85)
     {
-      // iLowH = 160;
- 	    // iHighH = 175;
+      braitenberg.stop();
+      usleep(100000);
+      Camera.size = 0;
+      if (goal == blue)
+      {
+        Camera.change2red();
 
-	    // iLowS = 60;
- 	    // iHighS = 230;
+        goal = red;
 
- 	    // iLowV = 0;
- 	    // iHighV = 255;
+        braitenberg.turn180();
+        usleep(100000);
+      }
+      else if (goal == red)
+      {
+        Camera.change2blue();
+        goal = blue;
 
-       goal = red;
-
-       braitenberg.turn180();
-       usleep(100000);
+        braitenberg.turn180();
+        usleep(100000);
+      }
     }
-    else if (goal == red)
+    float left, right;
+    if (Camera.x < 300)
     {
-      // iLowH = 100;
- 	    // iHighH = 110;
-
-	    // iLowS = 90;
- 	    // iHighS = 230;
-
- 	    // iLowV = 0;
- 	    // iHighV = 255;
-
-       goal = blue;
-
-       braitenberg.turn180();
-       usleep(100000);
+      left = (300 - Camera.x) / 300;
+      right = 0;
+    }
+    if (Camera.x > 340)
+    {
+      left = 0;
+      right = (Camera.x - 340) / 300;
     }
 
-    
-  }
- float left,right;
-  if (Camera.x <300)
-  {
-    left = (300-Camera.x )/300;
-    right = 0;
-  }
-  if (Camera.x > 340)
-  {
-    left = 0;
-    right = (Camera.x -340)/300;
-  }
-  
-    braitenberg.love(left,right,Camera.size);
+    braitenberg.love(left, right, Camera.size);
 
-	if (cv::waitKey(30) == 27)
-	{
-		// Release camera resources
+    if (cv::waitKey(30) == 27)
+    {
+      // Release camera resources
       controller test;
-  test.setLeftMotorSpeedDirection(0,0);
-  test.setRightMotorSpeedDirection(0,0);
-		break;
-	}
-	}
+      test.setLeftMotorSpeedDirection(0, 0);
+      test.setRightMotorSpeedDirection(0, 0);
+      break;
+    }
+  }
 
-	return 0;
+  return 0;
 }
