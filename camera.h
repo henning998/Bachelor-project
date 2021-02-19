@@ -25,7 +25,7 @@ private:
 	cv::Mat imageKeypoints;
 	std::vector<cv::Point2f> keyptXY;
 
-	void printParameter(raspicam::RaspiCam camera); // print parameter 
+	void printParameter(raspicam::RaspiCam camera);											   // print parameter
 	void setupCamera(int width, int height, bool vert, bool hori, raspicam::RaspiCam *Camera); // setup camera
 	// setup blobdetection
 	void BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color, bool filterarea, int minimumArea, int maximumArea, cv::SimpleBlobDetector::Params *sbdPar);
@@ -33,11 +33,10 @@ private:
 public:
 	float x, size;
 	camera(/* args */); // handle setup of everything related to the camera
-	~camera(); // release the pi camera
-	void getpicture(); // handle everything related to getting af pivture from the camera
-	void change2red(); // look for red blob
+	~camera();			// release the pi camera
+	void getpicture();	// handle everything related to getting af pivture from the camera
+	void change2red();	// look for red blob
 	void change2blue(); // look for blue blob
 };
-
 
 #endif
