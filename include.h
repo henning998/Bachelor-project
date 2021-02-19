@@ -24,7 +24,9 @@
 #include <arpa/inet.h> // defines in_addr structure
 #include <sys/socket.h> // for socket creation
 #include <netinet/in.h> //contains constants and structures needed for internet domain addresses
+#include <netdb.h>
 
 #include "camera.h"
 #include "Braitenberg.h"
 #include "server.h"
+#include "client.h"

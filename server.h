@@ -7,7 +7,9 @@ class server
 {
 private:
     time_t clock;
-    char dataSending[1025]; // Actually this is called packet in Network Communication, which contain data and send through.
+    int n = 0;
+    char dataReceived[1024];
+    char dataSending[1024]; // Actually this is called packet in Network Communication, which contain data and send through.
     int clintListn = 0, clintConnt = 0;
     struct sockaddr_in ipOfServer;
 
@@ -17,6 +19,7 @@ public:
     void connect();
     void writing(std::string s);
     void closing();
+    void reader();
 };
 
 server::server(/* args */)
@@ -42,6 +45,7 @@ server::~server()
 void server::connect()
 {
    clintConnt = accept(clintListn, (struct sockaddr *)NULL, NULL);
+   std::cout << "clintConnt: " << clintConnt << std::endl;
 }
 
 void server::writing(std::string s)
@@ -55,6 +59,25 @@ void server::closing()
 {
     close(clintConnt);
     sleep(1);
+}
+
+void server::reader()
+{
+    while ((n = read(clintConnt, dataReceived, sizeof(dataReceived) - 1)) > 0)
+    {
+        dataReceived[n] = 0;
+        if (fputs(dataReceived, stdout) == EOF)
+        {
+            printf("\nStandard output error");
+        }
+
+        printf("\n");
+    }
+
+    if (n < 0)
+    {
+        printf("Standard input error \n");
+    }
 }
 
 #endif

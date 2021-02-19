@@ -6,11 +6,8 @@ int main()
     {
         test.connect();
         test.writing("trash");
+        test.closing();
     }
-
-    // test.connect();
-
-    // test.closing();
 
     return 0;
 }
