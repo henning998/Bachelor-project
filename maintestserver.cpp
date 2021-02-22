@@ -6,22 +6,24 @@ int main(int argc, char **argv)
     bool drive = true;
     int key;
     Serverobj.connect();
+
     while (drive)
     {
-       system ("/bin/stty raw");
+        system("/bin/stty raw");
 
         key = getchar();
+
         
-        
+
         /* use system call to set terminal behaviour to more normal behaviour */
-       system ("/bin/stty cooked");
+        system("/bin/stty cooked");
         switch (key)
         {
         case 'w':
-            Serverobj.writing(std::to_string(key));
+            Serverobj.writing("w");
             break;
         case 's':
-            Serverobj.writing(std::to_string(key));
+            Serverobj.writing("s");
             break;
         /*case 'a':
             Serverobj.writing(std::to_string(key));
@@ -36,6 +38,8 @@ int main(int argc, char **argv)
             Serverobj.writing("NOPE");
             break;
         }
+        //Serverobj.writing("0");
+        //Serverobj.closing();
         //usleep(1000000);
     }
 
