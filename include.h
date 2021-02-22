@@ -1,3 +1,6 @@
+#ifndef INCLUDE_H
+#define INCLUDE_H
+
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -26,7 +29,12 @@
 #include <netinet/in.h> //contains constants and structures needed for internet domain addresses
 #include <netdb.h>
 
-#include "camera.h"
-#include "Braitenberg.h"
-#include "server.h"
-#include "client.h"
+
+// #include "Braitenberg.h"
+// #include "server.h"
+// #include "client.h"
+// #include "leader.h"
+// //#include "camera.h"
+
+
+#endif

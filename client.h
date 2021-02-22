@@ -2,6 +2,7 @@
 #define CLIENT_H
 
 #include "include.h"
+#include "Braitenberg.h"
 
 class client
 {
