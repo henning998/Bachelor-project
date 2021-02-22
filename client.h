@@ -21,5 +21,6 @@ public:
     void reader();
     void writing(std::string s);
     void message_Translation();
+    void closing();
 };
 #endif

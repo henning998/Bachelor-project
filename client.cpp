@@ -7,9 +7,10 @@ client::client(/* args */)
     {
         printf("Socket not created \n");
     }
+
     ipOfServer.sin_family = AF_INET;
     ipOfServer.sin_port = htons(2017);
-    ipOfServer.sin_addr.s_addr = inet_addr(ip.data());
+    ipOfServer.sin_addr.s_addr = inet_addr("192.168.20.150");
 }
 
 client::~client()
@@ -24,6 +25,10 @@ void client::connecting()
     {
         printf("Connection failed due to port and ip problems\n");
     }
+        struct timeval timeout;
+    timeout.tv_usec = 500;
+     if (setsockopt (CreateSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+        std::cout << "det virker ikke";
 }
 
 void client::reader()
@@ -36,6 +41,7 @@ void client::reader()
         if (dataReceived[i] != '0')
         {
             message.push_back(dataReceived[i]);
+            dataReceived[i]= '0';
         }
         else
         {
@@ -54,12 +60,12 @@ void client::writing(std::string s)
 
 void client::message_Translation()
 {
-   if (message == "w")
+   if (message == "w\n")
    {
        motor.setLeftMotorSpeedDirection(25,1);
        motor.setRightMotorSpeedDirection(25,1);
    }
-   else if (message == "s")
+   else if (message == "s\n")
    {
        motor.setLeftMotorSpeedDirection(25,0);
        motor.setRightMotorSpeedDirection(25,0);
@@ -70,4 +76,10 @@ void client::message_Translation()
        motor.setRightMotorSpeedDirection(0,1);
    }
    
+}
+
+void client::closing()
+{
+    close(CreateSocket);
+    sleep(1);
 }

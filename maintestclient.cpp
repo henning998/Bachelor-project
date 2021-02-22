@@ -2,23 +2,18 @@
 
 int main(int argc, char **argv)
 {
-  camera Camera;
   client Client;
+  Client.connecting();
+ 
   
-  enum goal
-  {
-    blue,
-    red
-  };
-  goal goal = red;
-  Braitenberg braitenberg;
-
+  camera Camera;
   while (true)
   {
     Camera.getpicture();
-
+  
     Client.reader();
     Client.message_Translation();
+    //Client.closing();
 
     if (cv::waitKey(30) == 27)
     {
