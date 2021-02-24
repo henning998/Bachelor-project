@@ -12,9 +12,9 @@ Braitenberg::~Braitenberg()
 }
 
  //love left sensor -> (-) left motor , right sensor -> (-) right motor
-void Braitenberg::love(float left, float right, float dist)// input between 0-1
+void Braitenberg::love(float left, float right, float dist,bool log)// input between 0-1
 {
-    float SpeedL , SpeedR;
+    float SpeedL, SpeedR;
     SpeedL = MaxSpeed - (left * MaxSpeed)*centerWeight -(dist*MaxSpeed)*distWeight;
     SpeedR = MaxSpeed - (right * MaxSpeed)*centerWeight-(dist*MaxSpeed)*distWeight;
     if (SpeedR< 18)
@@ -25,8 +25,7 @@ void Braitenberg::love(float left, float right, float dist)// input between 0-1
     {
         SpeedL = 0;
     }
-    Motor.setLeftMotorSpeedDirection(SpeedL,forward);
-    Motor.setRightMotorSpeedDirection(SpeedR,forward);
+    Motor.setMotorSpeedDirection(SpeedL,SpeedR,forward,forward,log);
 }
 
 //fear left sensor -> (+) left motor , right sensor -> (+) right motor
@@ -43,8 +42,7 @@ void Braitenberg::fear(float left, float right, float dist)// input between 0-1
     {
         SpeedL = 18;
     }
-    Motor.setLeftMotorSpeedDirection(SpeedL,forward);
-    Motor.setRightMotorSpeedDirection(SpeedR,forward);
+    Motor.setMotorSpeedDirection(SpeedL,SpeedR,forward,forward);
 }
 
 //love left sensor -> (-) right motor , right sensor -> (-) left motor
@@ -61,8 +59,7 @@ void Braitenberg::explorer(float left, float right, float dist)// input between 
     {
         SpeedL = 0;
     }
-    Motor.setLeftMotorSpeedDirection(SpeedL,forward);
-    Motor.setRightMotorSpeedDirection(SpeedR,forward);
+    Motor.setMotorSpeedDirection(SpeedL,SpeedR,forward,forward);
 }
 
 //love left sensor -> (+) right motor , right sensor -> (+) left motor
@@ -79,8 +76,7 @@ void Braitenberg::agression(float left, float right, float dist)// input between
     {
         SpeedL = 18;
     }
-    Motor.setLeftMotorSpeedDirection(SpeedL,forward);
-    Motor.setRightMotorSpeedDirection(SpeedR,forward);
+    Motor.setMotorSpeedDirection(SpeedL,SpeedR,forward,forward);
 }
 
 void Braitenberg::turn180()
@@ -88,12 +84,20 @@ void Braitenberg::turn180()
     Motor.setLeftMotorSpeedDirection(20,forward);
     Motor.setRightMotorSpeedDirection(20,backward);
     usleep(2600000); // 2,6 sec calculated with trail and error battery 90%-100%
+   // usleep(1800000);
     Motor.setLeftMotorSpeedDirection(0,forward);
     Motor.setRightMotorSpeedDirection(0,backward);
 }
 
-void Braitenberg::stop()
+void Braitenberg::stop(bool log )
 {
-    Motor.setLeftMotorSpeedDirection(0,forward);
-    Motor.setRightMotorSpeedDirection(0,forward);
+    Motor.setMotorSpeedDirection(0,0,forward,forward,log);
+}
+std::vector<std::vector<double>> Braitenberg::get_logging()
+{
+   return Motor.get_logging();
+}
+void Braitenberg::set_motor_speed(int left , int right)
+{
+    Motor.setMotorSpeedDirection(left,right,1,1);
 }
