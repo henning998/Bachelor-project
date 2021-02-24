@@ -4,11 +4,14 @@
 #include "client.h"
 #include "leader.h"
 #include "camera.h"
+#include "follower.h"
 
 int main(int argc, char **argv)
 {
-  leader leaderobj;
-  leaderobj.run();
+ follower followerobj;
+ followerobj.follow();
+  // leader leaderobj;
+  // leaderobj.run();
   // Braitenberg temp;
   // //temp.turn180();
 

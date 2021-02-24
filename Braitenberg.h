@@ -7,7 +7,7 @@ class Braitenberg
 {
 private:
     controller Motor;
-    int MaxSpeed = 50;
+    int MaxSpeed = 35;
     float centerWeight= 0.4;
     float distWeight = 0.4;
 public:
