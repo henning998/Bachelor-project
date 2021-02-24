@@ -9,9 +9,20 @@ int main(int argc, char **argv)
 {
   leader leaderobj;
   leaderobj.run();
-  controller test;
-  test.setLeftMotorSpeedDirection(0, 0);
-  test.setRightMotorSpeedDirection(0, 0);
+  // Braitenberg temp;
+  // //temp.turn180();
+
+
+//  camera temp;
+//  while (true)
+//  {
+ 
+//  temp.getpicture(); 
+//   cv::waitKey(27);
+// }
+   controller test;
+  test.setLeftMotorSpeedDirection(0, 1);
+  test.setRightMotorSpeedDirection(0, 1);
 
   return 0;
 }

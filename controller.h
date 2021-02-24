@@ -40,7 +40,10 @@ private:
     matrix_hal::MatrixIOBus bus;            // Create MatrixIOBus object for hardware communication
     matrix_hal::GPIOControl gpio, old_gpio; // Create GPIOControl object
     void initGPIOPins(matrix_hal::GPIOControl *gpio);
-
+    std::vector<std::vector<double>> datalog;
+    std::chrono::_V2::steady_clock::time_point timer;
+    bool startlogging = false;
+    //int speedLeft = 0, speedRight = 0, dirLeft = 0, dirRight = 0;
 public:
     controller(/* args */);
     ~controller();
@@ -53,6 +56,10 @@ public:
     // Directiom -> 1 = forward, 0 = reverse
     // Speed -> 0-100% in steps of 1%
     void setRightMotorSpeedDirection(int speed, int dir);
+    void setMotorSpeedDirection(int speedL, int speedR, int dirL, int dirR,bool log = false);
+    void logging(int speedL, int speedR, int dirL, int dirR);
+    std::vector<std::vector<double>> get_logging();
+
 };
 
 #endif

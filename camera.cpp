@@ -145,7 +145,7 @@ void camera::BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color
 void camera::change2red()
 {
 	iLowH = 160;
-	iHighH = 175;
+	iHighH = 179;
 	iLowS = 60;
 	iHighS = 230;
 	iLowV = 0;
@@ -157,9 +157,21 @@ void camera::change2blue()
 	iLowH = 100;
 	iHighH = 110;
 
-	iLowS = 90;
+	iLowS = 110;
 	iHighS = 230;
 
 	iLowV = 0;
+	iHighV = 255;
+}
+
+void camera::change2green()
+{
+	iLowH = 65;
+	iHighH = 80;
+
+	iLowS = 75;
+	iHighS = 166;
+
+	iLowV = 36;
 	iHighV = 255;
 }
