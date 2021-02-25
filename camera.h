@@ -31,7 +31,7 @@ private:
 	void BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color, bool filterarea, int minimumArea, int maximumArea, cv::SimpleBlobDetector::Params *sbdPar);
 
 public:
-	float x = 320, size;
+	float x = 320, size = -1;
 	bool new_pic = false;
 	camera(/* args */); // handle setup of everything related to the camera
 	~camera();			// release the pi camera
