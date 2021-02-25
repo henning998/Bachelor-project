@@ -60,34 +60,38 @@ void follower::follow()
             comm.reader();
             if (comm.data == "Goal found")
             {
+
                 comm.writing("Okay move");
-                comm.reader();
-                if (comm.data == "I have moved")
+                while (diff_state == FOLLOW)
                 {
-                    while (true)
+                    comm.reader();
+
+                    if (comm.data == "I have moved")
                     {
-                        picam.change2red();
-                        picam.getpicture();
-                        cv::waitKey(27);
-                        float left = 0, right = 0;
-                        if (picam.x < 300)
+                        while (diff_state == FOLLOW)
                         {
-                            left = (300 - picam.x) / 300;
-                            right = 0;
-                        }
-                        if (picam.x > 340)
-                        {
-                            left = 0;
-                            right = (picam.x - 340) / 300;
-                        }
-                        if (picam.new_pic)
-                        {
-                            motor.love(left, right, picam.size, true);
-                            if (picam.size > 0.35)
+                            picam.change2red();
+                            picam.getpicture();
+                            cv::waitKey(27);
+                            float left = 0, right = 0;
+                            if (picam.x < 300)
                             {
-                                motor.stop(true);
-                                diff_state = BACK_TO_NEST;
-                                break;
+                                left = (300 - picam.x) / 300;
+                                right = 0;
+                            }
+                            if (picam.x > 340)
+                            {
+                                left = 0;
+                                right = (picam.x - 340) / 300;
+                            }
+                            if (picam.new_pic)
+                            {
+                                motor.love(left, right, picam.size, true);
+                                if (picam.size > 0.35)
+                                {
+                                    motor.stop(true);
+                                    diff_state = BACK_TO_NEST;
+                                }
                             }
                         }
                     }
