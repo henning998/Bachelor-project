@@ -12,11 +12,12 @@ follower::~follower()
 void follower::getting_Ready()
 {
     comm.reader();
-    std::cout << "Indholdet fra comm.data: " << comm.data << std::endl;
+    //std::cout << "Indholdet fra comm.data: " << comm.data << std::endl;
     if (comm.data == "Ready")
     {
         picam.change2green();
         picam.getpicture();
+        cv::waitKey(27);
         if (picam.new_pic)
         {
             comm.writing("I am here");
@@ -59,11 +60,11 @@ void follower::follow()
             comm.reader();
             if (comm.data == "Goal found")
             {
-                while (true)
+                comm.writing("Okay move");
+                comm.reader();
+                if (comm.data == "I have moved")
                 {
-                    comm.writing("Okay move");
-                    comm.reader();
-                    if (comm.data == "I have moved")
+                    while (true)
                     {
                         picam.change2red();
                         picam.getpicture();
@@ -79,12 +80,15 @@ void follower::follow()
                             left = 0;
                             right = (picam.x - 340) / 300;
                         }
-                        motor.love(left, right, picam.size, true);
-                        if (picam.size > 0.35)
+                        if (picam.new_pic)
                         {
-                            motor.stop(true);
-                            diff_state = BACK_TO_NEST;
-                            break;
+                            motor.love(left, right, picam.size, true);
+                            if (picam.size > 0.35)
+                            {
+                                motor.stop(true);
+                                diff_state = BACK_TO_NEST;
+                                break;
+                            }
                         }
                     }
                 }
