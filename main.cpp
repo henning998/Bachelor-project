@@ -8,9 +8,9 @@
 
 int main(int argc, char **argv)
 {
- follower followerobj;
- followerobj.run();
-  // Braitenberg temp;
+  leader leaderobj;
+  leaderobj.run();
+  // // Braitenberg temp;
   // //temp.turn180();
 
 

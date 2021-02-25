@@ -50,7 +50,7 @@ void follower::follow()
             {
                 while (true)
                 {
-                    comm.writing("Okay, move");
+                    comm.writing("Okay move");
                     comm.reader();
                     if (comm.data == "I have moved")
                     {
