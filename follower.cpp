@@ -41,7 +41,14 @@ void follower::follow()
             left = 0;
             right = (picam.x - 340) / 300;
         }
-        motor.love(left, right, picam.size, true);
+        if (picam.new_pic)
+        {
+            motor.love(left, right, picam.size, true);
+        }
+        else
+        {
+            motor.stop();
+        }
         if (picam.size > 0.35)
         {
             motor.stop(true);

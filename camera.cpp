@@ -37,6 +37,7 @@ camera::~camera()
 
 void camera::getpicture()
 {
+	new_pic = false;
 	// Grab image into internal buffer
 	Camera.grab();
 	// Copy latest camera buffer into our buffer
@@ -87,6 +88,7 @@ void camera::getpicture()
 		size = keypts.front().size / 300;
 		std::cout << "[x,y] = "
 				  << "[" << x << "," << keyptXY.front().y << "]" << size << std::endl;
+		new_pic = true;
 	}
 }
 

@@ -32,6 +32,7 @@ private:
 
 public:
 	float x = 320, size;
+	bool new_pic = false;
 	camera(/* args */); // handle setup of everything related to the camera
 	~camera();			// release the pi camera
 	void getpicture();	// handle everything related to getting af pivture from the camera
