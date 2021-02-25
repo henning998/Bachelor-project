@@ -12,10 +12,12 @@ follower::~follower()
 void follower::getting_Ready()
 {
     comm.reader();
+    std::cout << "Indholdet fra comm.data: " << comm.data << std::endl;
     if (comm.data == "Ready")
     {
-        usleep(500000);
+        //usleep(300000);
         comm.writing("I am here");
+        std::cout << "I wrote" << std::endl;
         diff_state = FOLLOW;
     }
 }

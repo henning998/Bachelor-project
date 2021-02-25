@@ -14,7 +14,7 @@ private:
     Braitenberg motor;
     server comm;
     enum state {GETTING_READY, FOLLOW, BACK_TO_NEST, BACK_TO_FOOD, BACK_TO_NEST_AGAIN, HOOKED_ON_A_FEELING};
-    state diff_state = FOLLOW;
+    state diff_state = GETTING_READY;
     std::vector<std::vector<double>> route_from_nest_to_food;
     std::vector<std::vector<double>> route_from_food_to_nest;
 

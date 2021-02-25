@@ -83,7 +83,7 @@ void Braitenberg::turn180()
 {
     Motor.setLeftMotorSpeedDirection(20,forward);
     Motor.setRightMotorSpeedDirection(20,backward);
-    usleep(2600000); // 2,6 sec calculated with trail and error battery 90%-100%
+    usleep(2650000); // 2,6 sec calculated with trail and error battery 90%-100%
    // usleep(1800000);
     Motor.setLeftMotorSpeedDirection(0,forward);
     Motor.setRightMotorSpeedDirection(0,backward);
