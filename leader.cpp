@@ -55,7 +55,7 @@ void leader::call_Follower()
 {
     comm.writing("Ready");
     comm.reader();
-    if (comm.message.data() == "I am here")
+    if (comm.message == "I am here")
     {
         diff_state = GUIDE_FOLLOWER;
     }
@@ -72,7 +72,7 @@ void leader::guide_Follower()
     {
         comm.writing("Goal found");
         comm.reader();
-        if (comm.message.data() == "Okay, move")
+        if (comm.message == "Okay, move")
         {
             diff_state = MAKE_ROOM;
             break;

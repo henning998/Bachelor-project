@@ -12,8 +12,9 @@ follower::~follower()
 void follower::getting_Ready()
 {
     comm.reader();
-    if (comm.data.data() == "Ready")
+    if (comm.data == "Ready")
     {
+        usleep(500000);
         comm.writing("I am here");
         diff_state = FOLLOW;
     }
@@ -21,6 +22,7 @@ void follower::getting_Ready()
 
 void follower::follow()
 {
+
     picam.change2green();
     while (diff_state == FOLLOW)
     {
@@ -42,13 +44,13 @@ void follower::follow()
         {
             motor.stop(true);
             comm.reader();
-            if (comm.data.data() == "Goal found")
+            if (comm.data == "Goal found")
             {
                 while (true)
                 {
                     comm.writing("Okay, move");
                     comm.reader();
-                    if (comm.data.data() == "I have moved")
+                    if (comm.data == "I have moved")
                     {
                         picam.change2red();
                         picam.getpicture();
@@ -85,8 +87,8 @@ void follower::back_To_Nest()
     reverse_Motor_values();
     for (int i = 0; i < route_from_food_to_nest.size(); i++)
     {
-        motor.set_motor_speed(route_from_food_to_nest.at(i).at(0),route_from_food_to_nest.at(i).at(1));
-        usleep(route_from_food_to_nest.at(i).back()*1000000);// from sec to mikrosec.
+        motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
+        usleep(route_from_food_to_nest.at(i).back() * 1000000); // from sec to mikrosec.
     }
     diff_state = BACK_TO_FOOD;
 }
@@ -95,13 +97,12 @@ void follower::back_To_Food()
 {
     motor.turn180();
     picam.change2red();
-     for (int i = 0; i < route_from_nest_to_food.size(); i++)
+    for (int i = 0; i < route_from_nest_to_food.size(); i++)
     {
-        motor.set_motor_speed(route_from_nest_to_food.at(i).at(0),route_from_nest_to_food.at(i).at(1));
-        usleep(route_from_nest_to_food.at(i).back()*1000000);// from sec to mikrosec.
+        motor.set_motor_speed(route_from_nest_to_food.at(i).at(0), route_from_nest_to_food.at(i).at(1));
+        usleep(route_from_nest_to_food.at(i).back() * 1000000); // from sec to mikrosec.
     }
     diff_state = BACK_TO_NEST_AGAIN;
-
 }
 
 void follower::back_To_Nest_Again()
@@ -111,8 +112,8 @@ void follower::back_To_Nest_Again()
     reverse_Motor_values();
     for (int i = 0; i < route_from_food_to_nest.size(); i++)
     {
-        motor.set_motor_speed(route_from_food_to_nest.at(i).at(0),route_from_food_to_nest.at(i).at(1));
-        usleep(route_from_food_to_nest.at(i).back()*1000000);// from sec to mikrosec.
+        motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
+        usleep(route_from_food_to_nest.at(i).back() * 1000000); // from sec to mikrosec.
     }
     diff_state = HOOKED_ON_A_FEELING;
 }
@@ -168,7 +169,7 @@ void follower::reverse_Motor_values()
         // route_from_nest_to_food.at(i).at(1) = temp;
         std::swap(route_from_food_to_nest[i][0], route_from_food_to_nest[i][1]);
     }
-    
+
     std::reverse(route_from_food_to_nest.begin(), route_from_food_to_nest.end());
     route_from_food_to_nest.push_back(temp);
 
@@ -176,12 +177,10 @@ void follower::reverse_Motor_values()
     {
         for (int j = 0; j < route_from_food_to_nest.at(i).size(); j++)
         {
-            std::cout << route_from_food_to_nest.at(i).at(j) << " "; 
+            std::cout << route_from_food_to_nest.at(i).at(j) << " ";
         }
         std::cout << std::endl;
     }
-
-    
 }
 
 // void follower::message_Handler()

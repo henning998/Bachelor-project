@@ -26,7 +26,7 @@ void server::connect()
 void server::writing(std::string s)
 {
     snprintf(dataSending, sizeof(dataSending), "%s", s.data()); // Printing successful message
-    clock = time(NULL);
+    //clock = time(NULL);
     write(clintConnt, dataSending, strlen(dataSending));
 }
 
@@ -46,6 +46,7 @@ void server::reader()
         if (isalpha(dataReceived[i]))
         {
             data.push_back(dataReceived[i]);
+            dataReceived[i] = '0';
         }
         else
         {
