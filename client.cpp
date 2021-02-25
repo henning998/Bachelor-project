@@ -53,7 +53,7 @@ void client::reader()
 
 void client::writing(std::string s)
 {
-    snprintf(dataSending, sizeof(dataSending), "%s", s.data()); // Printing successful message
+    snprintf(dataSending, sizeof(dataSending), "%s.", s.data()); // Printing successful message
     std::cout << "CreateSocket: " << CreateSocket << std::endl;
     write(CreateSocket, dataSending, strlen(dataSending));
 }

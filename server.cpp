@@ -25,7 +25,7 @@ void server::connect()
 
 void server::writing(std::string s)
 {
-    snprintf(dataSending, sizeof(dataSending), "%s", s.data()); // Printing successful message
+    snprintf(dataSending, sizeof(dataSending), "%s.", s.data()); // Printing successful message
     //clock = time(NULL);
     write(clintConnt, dataSending, strlen(dataSending));
 }
