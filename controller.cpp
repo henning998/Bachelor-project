@@ -76,7 +76,7 @@ void controller::setRightMotorSpeedDirection(int speed, int dir)
 
 void controller::setMotorSpeedDirection(int speedL, int speedR, int dirL, int dirR,bool log )
 {
-        setLeftMotorSpeedDirection(speedL+3,dirL);
+        setLeftMotorSpeedDirection(speedL,dirL);
         setRightMotorSpeedDirection(speedR,dirR);
         if(log)
         {

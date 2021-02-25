@@ -43,7 +43,7 @@ void server::reader()
 
     for (int i = 0; i < sizeof(dataReceived); i++)
     {
-        if (dataReceived[i] != '0')
+        if (isalpha(dataReceived[i]))
         {
             data.push_back(dataReceived[i]);
         }

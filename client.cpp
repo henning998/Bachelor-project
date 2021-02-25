@@ -38,7 +38,7 @@ void client::reader()
 
     for (int i = 0; i < sizeof(dataReceived); i++)
     {
-        if (dataReceived[i] != '0')
+        if (isalpha(dataReceived[i]))
         {
             message.push_back(dataReceived[i]);
             dataReceived[i]= '0';

@@ -8,10 +8,8 @@
 
 int main(int argc, char **argv)
 {
- follower followerobj;
- followerobj.follow();
-  // leader leaderobj;
-  // leaderobj.run();
+ leader leaderobj;
+ leaderobj.run();
   // Braitenberg temp;
   // //temp.turn180();
 
@@ -24,8 +22,8 @@ int main(int argc, char **argv)
 //   cv::waitKey(27);
 // }
    controller test;
-  test.setLeftMotorSpeedDirection(0, 1);
-  test.setRightMotorSpeedDirection(0, 1);
+  test.setLeftMotorSpeedDirection(0, 0);
+  test.setRightMotorSpeedDirection(0, 0);
 
   return 0;
 }

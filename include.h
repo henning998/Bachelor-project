@@ -28,6 +28,7 @@
 #include <sys/socket.h> // for socket creation
 #include <netinet/in.h> //contains constants and structures needed for internet domain addresses
 #include <netdb.h>
+#include <cctype>
 
 #include <chrono>
 
