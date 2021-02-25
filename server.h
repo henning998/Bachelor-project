@@ -12,8 +12,9 @@ private:
     char dataSending[1024]; // Actually this is called packet in Network Communication, which contain data and send through.
     int clintListn = 0, clintConnt = 0;
     struct sockaddr_in ipOfServer;
-
+    
 public:
+    std::string data;
     server(/* args */);
     ~server();
     void connect();

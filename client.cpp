@@ -33,8 +33,8 @@ void client::connecting()
 
 void client::reader()
 {
-    read(CreateSocket, dataReceived, sizeof(dataReceived));
     message.clear();
+    read(CreateSocket, dataReceived, sizeof(dataReceived));
 
     for (int i = 0; i < sizeof(dataReceived); i++)
     {
@@ -53,7 +53,7 @@ void client::reader()
 
 void client::writing(std::string s)
 {
-    snprintf(dataSending, sizeof(dataSending), "%s\n", s.data()); // Printing successful message
+    snprintf(dataSending, sizeof(dataSending), "%s", s.data()); // Printing successful message
     std::cout << "CreateSocket: " << CreateSocket << std::endl;
     write(CreateSocket, dataSending, strlen(dataSending));
 }

@@ -16,7 +16,7 @@ public:
     //love left sensor -> (-) left motor , right sensor -> (-) right motor
     void love(float left, float right, float dist, bool log = false);// input between 0-1
     //fear left sensor -> (+) left motor , right sensor -> (+) right motor
-    void fear(float left, float right, float dist);// input between 0-1
+    void fear(float left, float right, float dist, bool log = false);// input between 0-1
     //love left sensor -> (-) right motor , right sensor -> (-) left motor
     void explorer(float left, float right, float dist);// input between 0-1
     //love left sensor -> (+) right motor , right sensor -> (+) left motor

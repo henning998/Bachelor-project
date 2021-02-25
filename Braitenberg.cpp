@@ -29,7 +29,7 @@ void Braitenberg::love(float left, float right, float dist,bool log)// input bet
 }
 
 //fear left sensor -> (+) left motor , right sensor -> (+) right motor
-void Braitenberg::fear(float left, float right, float dist)// input between 0-1
+void Braitenberg::fear(float left, float right, float dist,bool log)// input between 0-1
 {
     float SpeedL , SpeedR;
     SpeedL =  (left * MaxSpeed)*centerWeight + (dist*MaxSpeed)*distWeight;
@@ -42,7 +42,7 @@ void Braitenberg::fear(float left, float right, float dist)// input between 0-1
     {
         SpeedL = 18;
     }
-    Motor.setMotorSpeedDirection(SpeedL,SpeedR,forward,forward);
+    Motor.setMotorSpeedDirection(SpeedL,SpeedR,forward,forward,log);
 }
 
 //love left sensor -> (-) right motor , right sensor -> (-) left motor

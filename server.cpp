@@ -25,7 +25,7 @@ void server::connect()
 
 void server::writing(std::string s)
 {
-    snprintf(dataSending, sizeof(dataSending), "%s\n", s.data()); // Printing successful message
+    snprintf(dataSending, sizeof(dataSending), "%s", s.data()); // Printing successful message
     clock = time(NULL);
     write(clintConnt, dataSending, strlen(dataSending));
 }
@@ -38,20 +38,19 @@ void server::closing()
 
 void server::reader()
 {
-
+    data.clear();
     read(clintConnt, dataReceived, sizeof(dataReceived));
-    std::string test;
 
     for (int i = 0; i < sizeof(dataReceived); i++)
     {
         if (dataReceived[i] != '0')
         {
-            test.push_back(dataReceived[i]);
+            data.push_back(dataReceived[i]);
         }
         else
         {
             break;
         }
     }
-    std::cout << test << std::endl;
+    std::cout << data << std::endl;
 }
