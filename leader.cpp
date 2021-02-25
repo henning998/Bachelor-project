@@ -53,6 +53,7 @@ void leader::back_To_Nest()
 }
 void leader::call_Follower()
 {
+    usleep(500000);
     comm.writing("Ready");
     comm.reader();
     if (comm.message == "I am here")
@@ -70,6 +71,7 @@ void leader::guide_Follower()
     }
     while (true)
     {
+        usleep(500000);
         comm.writing("Goal found");
         comm.reader();
         if (comm.message == "Okay move")

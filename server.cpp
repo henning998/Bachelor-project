@@ -21,6 +21,10 @@ void server::connect()
 {
     clintConnt = accept(clintListn, (struct sockaddr *)NULL, NULL);
     std::cout << "clintConnt: " << clintConnt << std::endl;
+     struct timeval timeout;
+    timeout.tv_usec = 500;
+    if (setsockopt (clintConnt, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+        std::cout << "det virker ikke";
 }
 
 void server::writing(std::string s)
