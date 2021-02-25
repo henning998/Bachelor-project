@@ -91,6 +91,7 @@ void follower::follow()
                                 {
                                     motor.stop(true);
                                     diff_state = BACK_TO_NEST;
+                                    get_logging();
                                 }
                             }
                         }
@@ -171,6 +172,7 @@ void follower::run()
 
 void follower::get_logging()
 {
+    route_from_nest_to_food = motor.get_logging();
 }
 
 void follower::printlog()
