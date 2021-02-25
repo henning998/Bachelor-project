@@ -2,6 +2,7 @@
 
 leader::leader(/* args */)
 {
+    comm.connecting();
 }
 
 leader::~leader()

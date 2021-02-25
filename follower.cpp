@@ -2,6 +2,7 @@
 
 follower::follower()
 {
+    comm.connect();
 }
 
 follower::~follower()
