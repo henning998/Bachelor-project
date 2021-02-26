@@ -8,8 +8,8 @@
 
 int main(int argc, char **argv)
 {
- follower followerobj;
- followerobj.run();
+ leader leaderobj;
+ leaderobj.run();
   // // Braitenberg temp;
   // //temp.turn180();
 

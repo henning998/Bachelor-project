@@ -12,8 +12,7 @@ follower::~follower()
 void follower::getting_Ready()
 {
     comm.reader();
-    //std::cout << "Indholdet fra comm.data: " << comm.data << std::endl;
-    if (comm.data == "Ready")
+    if (comm.message == "Ready")
     {
         picam.change2green();
         picam.getpicture();
@@ -36,6 +35,7 @@ void follower::follow()
         picam.getpicture();
         cv::waitKey(27);
         float left = 0, right = 0;
+        // Calculate how much the blob is to the left/right of the center
         if (picam.x < 300)
         {
             left = (300 - picam.x) / 300;
@@ -46,6 +46,7 @@ void follower::follow()
             left = 0;
             right = (picam.x - 340) / 300;
         }
+        // If the green blob is being detected drive else stop
         if (picam.new_pic)
         {
             motor.love(left, right, picam.size, true);
@@ -54,11 +55,13 @@ void follower::follow()
         {
             motor.stop();
         }
+        // If the robot are to close
         if (picam.size > 0.35)
         {
             motor.stop(true);
             comm.reader();
-            if (comm.data == "Goal found")
+            // Does the leader see the goal
+            if (comm.message == "Goal found")
             {
 
                 comm.writing("Okay move");
@@ -66,7 +69,7 @@ void follower::follow()
                 {
                     comm.reader();
 
-                    if (comm.data == "I have moved")
+                    if (comm.message == "I have moved")
                     {
                         while (diff_state == FOLLOW)
                         {
@@ -74,6 +77,7 @@ void follower::follow()
                             picam.getpicture();
                             cv::waitKey(27);
                             float left = 0, right = 0;
+                            // Calculate how much the blob is to the left/right of the center
                             if (picam.x < 300)
                             {
                                 left = (300 - picam.x) / 300;
@@ -87,6 +91,7 @@ void follower::follow()
                             if (picam.new_pic)
                             {
                                 motor.love(left, right, picam.size, true);
+                                // When the robot see the goal
                                 if (picam.size > 0.35)
                                 {
                                     motor.stop(true);
@@ -107,6 +112,7 @@ void follower::back_To_Nest()
     motor.turn180();
     picam.change2blue();
     reverse_Motor_values();
+    // Drive on the logged motor values
     for (int i = 0; i < route_from_food_to_nest.size(); i++)
     {
         motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
@@ -119,6 +125,7 @@ void follower::back_To_Food()
 {
     motor.turn180();
     picam.change2red();
+    // Drive on the logged motor values
     for (int i = 0; i < route_from_nest_to_food.size(); i++)
     {
         motor.set_motor_speed(route_from_nest_to_food.at(i).at(0), route_from_nest_to_food.at(i).at(1));
@@ -132,6 +139,7 @@ void follower::back_To_Nest_Again()
     motor.turn180();
     picam.change2blue();
     reverse_Motor_values();
+    // Drive on the logged motor values
     for (int i = 0; i < route_from_food_to_nest.size(); i++)
     {
         motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
@@ -186,10 +194,6 @@ void follower::reverse_Motor_values()
     route_from_food_to_nest.pop_back();
     for (int i = 0; i < route_from_food_to_nest.size(); i++)
     {
-        // double temp;
-        // temp = route_from_nest_to_food.at(i).at(0);
-        // route_from_nest_to_food.at(i).at(0) = route_from_nest_to_food.at(i).at(1);
-        // route_from_nest_to_food.at(i).at(1) = temp;
         std::swap(route_from_food_to_nest[i][0], route_from_food_to_nest[i][1]);
     }
 
@@ -205,22 +209,3 @@ void follower::reverse_Motor_values()
         std::cout << std::endl;
     }
 }
-
-// void follower::message_Handler()
-// {
-//     comm.reader();
-//     if (comm.data.data() == "Ready")
-//     {
-//        getting_Ready();
-
-//     }
-//     else if (/* condition */)
-//     {
-//         /* code */
-//     }
-//     else
-//     {
-//         /* code */
-//     }
-
-// }

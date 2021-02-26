@@ -1,6 +1,6 @@
 #include "leader.h"
 
-leader::leader(/* args */)
+leader::leader()
 {
     comm.connecting();
 }
@@ -16,6 +16,7 @@ void leader::find_Food()
         picam.getpicture();
         cv::waitKey(27);
         float left = 0, right = 0;
+        // Calculate how much the blob is to the left/right of the center
         if (picam.x < 300)
         {
             left = (300 - picam.x) / 300;
@@ -27,7 +28,7 @@ void leader::find_Food()
             right = (picam.x - 340) / 300;
         }
         motor.love(left, right, picam.size, true);
-        if (picam.size > 0.85)
+        if (picam.size > 0.85) // When the robot is close enough to the blob
         {
             motor.stop(true);
             usleep(100000);
@@ -43,20 +44,21 @@ void leader::back_To_Nest()
 {
     picam.change2blue();
     reverse_Motor_values();
+    // Drive on the logged motor values
     for (int i = 0; i < route_from_food_to_nest.size(); i++)
     {
         motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
-        usleep(route_from_food_to_nest.at(i).back() * 1000000); // from sec to mikrosec.
+        usleep(route_from_food_to_nest.at(i).back() * 1000000); // From sec to mikrosec.
     }
     motor.turn180();
     diff_state = CALL_FOLLOWER;
 }
 void leader::call_Follower()
 {
-    usleep(500000);
-    comm.writing("Ready");
+    usleep(500000);        // Sleep so server don't get spammed
+    comm.writing("Ready"); // Ready to start tandem running
     comm.reader();
-    if (comm.message == "I am here")
+    if (comm.message == "I am here") // Wait for response from client
     {
         diff_state = GUIDE_FOLLOWER;
     }
@@ -64,14 +66,15 @@ void leader::call_Follower()
 void leader::guide_Follower()
 {
     picam.change2red();
+    // Drive on the logged motor values
     for (int i = 0; i < route_from_nest_to_food.size(); i++)
     {
         motor.set_motor_speed(route_from_nest_to_food.at(i).at(0), route_from_nest_to_food.at(i).at(1));
-        usleep(route_from_nest_to_food.at(i).back() * 1000000); // from sec to mikrosec.
+        usleep(route_from_nest_to_food.at(i).back() * 1000000); // From sec to mikrosec.
     }
     while (true)
     {
-        usleep(500000);
+        usleep(500000); // Sleep so server don't get spammed
         comm.writing("Goal found");
         comm.reader();
         if (comm.message == "Okay move")
@@ -88,6 +91,7 @@ void leader::make_room()
     picam.getpicture();
     cv::waitKey(27);
     float left = 0, right = 0;
+    // Calculate how much the blob is to the left/right of the center
     if (picam.x < 300)
     {
         left = (300 - picam.x) / 300;
@@ -111,6 +115,7 @@ void leader::back_to_nest_again()
     motor.turn180();
     picam.change2blue();
     reverse_Motor_values();
+    // Drive on the logged motor values
     for (int i = 0; i < route_from_food_to_nest.size(); i++)
     {
         motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
@@ -137,7 +142,7 @@ void leader::printlog()
 
 void leader::run()
 {
-    while (1)
+    while (true)
     {
         switch (diff_state)
         {
@@ -174,14 +179,10 @@ void leader::reverse_Motor_values()
     route_from_food_to_nest.pop_back();
     for (int i = 0; i < route_from_food_to_nest.size(); i++)
     {
-        // double temp;
-        // temp = route_from_nest_to_food.at(i).at(0);
-        // route_from_nest_to_food.at(i).at(0) = route_from_nest_to_food.at(i).at(1);
-        // route_from_nest_to_food.at(i).at(1) = temp;
         std::swap(route_from_food_to_nest[i][0], route_from_food_to_nest[i][1]);
     }
 
-    std::reverse(route_from_food_to_nest.begin(), route_from_food_to_nest.end());
+    std::reverse(route_from_food_to_nest.begin(), route_from_food_to_nest.end()); 
     route_from_food_to_nest.push_back(temp);
 
     for (int i = 0; i < route_from_food_to_nest.size(); i++)

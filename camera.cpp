@@ -1,13 +1,12 @@
 #include "camera.h"
 
-camera::camera(/* args */)
+camera::camera()
 {
 	printParameter(Camera);
 	setupCamera(640, 480, true, true, &Camera);
-	if (!Camera.open())
+	if (!Camera.open()) // Is the camera open
 	{
 		std::cerr << "Error opening camera." << std::endl;
-		//return -1;
 	}
 	std::cout << "Waiting for camera stabilisation...";
 	usleep(3000000);
@@ -48,7 +47,6 @@ void camera::getpicture()
 	if (!imageMat.data)
 	{
 		std::cout << "No data in Mat imageMat." << std::endl;
-		//return -1;
 	}
 	// Convert image from BGR to HSV
 	cv::cvtColor(imageMat, imageMat, cv::COLOR_BGR2HSV);
@@ -58,11 +56,11 @@ void camera::getpicture()
 	// Threshold image
 	cv::inRange(imageMat, cv::Scalar(iLowH, iLowS, iLowV), cv::Scalar(iHighH, iHighS, iHighV), imageThreshold);
 
-	//morphological opening (remove small objects from the foreground)
+	//Morphological opening (remove small objects from the foreground)
 	erode(imageThreshold, imageThreshold, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
 	dilate(imageThreshold, imageThreshold, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
 
-	//morphological closing (fill small holes in the foreground)
+	//Morphological closing (fill small holes in the foreground)
 	dilate(imageThreshold, imageThreshold, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
 	erode(imageThreshold, imageThreshold, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)));
 	sbd->detect(imageThreshold, keypts);
@@ -82,6 +80,7 @@ void camera::getpicture()
 
 	cv::KeyPoint::convert(keypts, keyptXY);
 
+	// If there are a blob get the x, y & size
 	if (keyptXY.size() == 1)
 	{
 		x = keyptXY.front().x;
@@ -139,7 +138,7 @@ void camera::BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color
 	// Look for colours that match grayscale value of 255 (white)
 	sbdPar->blobColor = color; // 255
 	// Filter by area
-	sbdPar->filterByArea = filterarea; // true
+	sbdPar->filterByArea = filterarea; // True
 	sbdPar->minArea = minimumArea;	   // 100x100 pixels // 10000
 	sbdPar->maxArea = maximumArea;	   // 400x400 pixels //160000
 }

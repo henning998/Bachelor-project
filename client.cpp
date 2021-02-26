@@ -3,20 +3,19 @@
 client::client(/* args */)
 {
     memset(dataReceived, '0', sizeof(dataReceived));
-    if ((CreateSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    if ((CreateSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0) //Protocol = "0", compiler choose the protocol automatically
     {
         printf("Socket not created \n");
     }
 
+    //Setup of ip
     ipOfServer.sin_family = AF_INET;
     ipOfServer.sin_port = htons(2017);
-    ipOfServer.sin_addr.s_addr = inet_addr("192.168.20.150");
+    ipOfServer.sin_addr.s_addr = inet_addr(ip.data());
 }
 
 client::~client()
 {
-    motor.setLeftMotorSpeedDirection(0,1);
-    motor.setRightMotorSpeedDirection(0,1);
 }
 
 void client::connecting()
@@ -25,10 +24,11 @@ void client::connecting()
     {
         printf("Connection failed due to port and ip problems\n");
     }
-        struct timeval timeout;
+    // Set up a timeout, so there is no busy waiting
+    struct timeval timeout;
     timeout.tv_usec = 500;
-     if (setsockopt (CreateSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
-        std::cout << "det virker ikke";
+    if (setsockopt(CreateSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+        std::cout << "Recieve timeout does not work";
 }
 
 void client::reader()
@@ -38,10 +38,10 @@ void client::reader()
 
     for (int i = 0; i < sizeof(dataReceived); i++)
     {
-        if (isalpha(dataReceived[i]) || dataReceived[i] == ' ')
+        if (isalpha(dataReceived[i]) || dataReceived[i] == ' ') //isalpha checks if value in dataRecieved is alphabetic
         {
             message.push_back(dataReceived[i]);
-            dataReceived[i]= '0';
+            dataReceived[i] = '0';
         }
         else
         {
@@ -54,28 +54,8 @@ void client::reader()
 void client::writing(std::string s)
 {
     snprintf(dataSending, sizeof(dataSending), "%s.", s.data()); // Printing successful message
-    std::cout << "CreateSocket: " << CreateSocket << std::endl;
+    //std::cout << "CreateSocket: " << CreateSocket << std::endl;
     write(CreateSocket, dataSending, strlen(dataSending));
-}
-
-void client::message_Translation()
-{
-   if (message == "w\n")
-   {
-       motor.setLeftMotorSpeedDirection(25,1);
-       motor.setRightMotorSpeedDirection(25,1);
-   }
-   else if (message == "s\n")
-   {
-       motor.setLeftMotorSpeedDirection(25,0);
-       motor.setRightMotorSpeedDirection(25,0);
-   }
-   else
-   {
-       motor.setLeftMotorSpeedDirection(0,1);
-       motor.setRightMotorSpeedDirection(0,1);
-   }
-   
 }
 
 void client::closing()

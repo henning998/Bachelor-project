@@ -37,29 +37,31 @@
 class controller
 {
 private:
-    matrix_hal::MatrixIOBus bus;            // Create MatrixIOBus object for hardware communication
-    matrix_hal::GPIOControl gpio, old_gpio; // Create GPIOControl object
+    matrix_hal::MatrixIOBus bus;                      // Create MatrixIOBus object for hardware communication
+    matrix_hal::GPIOControl gpio, old_gpio;           // Create GPIOControl object
+    std::vector<std::vector<double>> datalog;         // Vector that's hold the logged information
+    std::chrono::_V2::steady_clock::time_point timer; // Timer
+    // Initialize the GPIO pins as input and output
     void initGPIOPins(matrix_hal::GPIOControl *gpio);
-    std::vector<std::vector<double>> datalog;
-    std::chrono::_V2::steady_clock::time_point timer;
-    bool startlogging = false;
-    //int speedLeft = 0, speedRight = 0, dirLeft = 0, dirRight = 0;
+
 public:
-    controller(/* args */);
+    controller();
     ~controller();
 
-    /*  Set speed and direction of LEFT motor
-    Directiom -> 1 = forward, 0 = reverse
-    Speed -> 0-100% in steps of 1%*/
+    //Set speed and direction of LEFT motor
+    //@param dir Directiom -> 1 = forward, 0 = reverse
+    //@param speed Speed -> 0-100% in steps of 1%
     void setLeftMotorSpeedDirection(int speed, int dir);
-    // Set speed and direction of RIGHT motor
-    // Directiom -> 1 = forward, 0 = reverse
-    // Speed -> 0-100% in steps of 1%
+    /*Set speed and direction of RIGHT motor
+    @param dir Directiom -> 1 = forward, 0 = reverse
+    @param speed Speed -> 0-100% in steps of 1%*/
     void setRightMotorSpeedDirection(int speed, int dir);
-    void setMotorSpeedDirection(int speedL, int speedR, int dirL, int dirR,bool log = false);
+    // Set the motor speed and diretion for both motors
+    void setMotorSpeedDirection(int speedL, int speedR, int dirL, int dirR, bool log = false);
+    // Logging the different motor values
     void logging(int speedL, int speedR, int dirL, int dirR);
+    // Return the logged information
     std::vector<std::vector<double>> get_logging();
-
 };
 
 #endif
