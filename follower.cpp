@@ -36,16 +36,7 @@ void follower::follow()
         cv::waitKey(27);
         float left = 0, right = 0;
         // Calculate how much the blob is to the left/right of the center
-        if (picam.x < 300)
-        {
-            left = (300 - picam.x) / 300;
-            right = 0;
-        }
-        if (picam.x > 340)
-        {
-            left = 0;
-            right = (picam.x - 340) / 300;
-        }
+        blob_left_right(left, right);
         // If the green blob is being detected drive else stop
         if (picam.new_pic)
         {
@@ -78,16 +69,7 @@ void follower::follow()
                             cv::waitKey(27);
                             float left = 0, right = 0;
                             // Calculate how much the blob is to the left/right of the center
-                            if (picam.x < 300)
-                            {
-                                left = (300 - picam.x) / 300;
-                                right = 0;
-                            }
-                            if (picam.x > 340)
-                            {
-                                left = 0;
-                                right = (picam.x - 340) / 300;
-                            }
+                            blob_left_right(left, right);
                             if (picam.new_pic)
                             {
                                 motor.love(left, right, picam.size, true);
@@ -207,5 +189,19 @@ void follower::reverse_Motor_values()
             std::cout << route_from_food_to_nest.at(i).at(j) << " ";
         }
         std::cout << std::endl;
+    }
+}
+
+void follower::blob_left_right(float &left, float &right)
+{
+    if (picam.x < 150)
+    {
+        left = (150 - picam.x) / 150;
+        right = 0;
+    }
+    if (picam.x > 170)
+    {
+        left = 0;
+        right = (picam.x - 170) / 150;
     }
 }

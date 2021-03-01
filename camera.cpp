@@ -3,7 +3,7 @@
 camera::camera()
 {
 	printParameter(Camera);
-	setupCamera(640, 480, true, true, &Camera);
+	setupCamera(320, 240, true, true, &Camera);
 	if (!Camera.open()) // Is the camera open
 	{
 		std::cerr << "Error opening camera." << std::endl;
@@ -14,7 +14,7 @@ camera::camera()
 	img_buf_len = Camera.getImageTypeSize(raspicam::RASPICAM_FORMAT_BGR);
 	img_buf = new unsigned char[img_buf_len];
 
-	BlobSetup(1, 1000, true, 255, true, 400, 160000, &sbdPara);
+	BlobSetup(1, 1000, true, 255, true, 100, 40000, &sbdPara);
 	sbd = cv::SimpleBlobDetector::create(sbdPara);
 	cv::namedWindow("HSV controls", cv::WINDOW_NORMAL);
 
@@ -84,7 +84,7 @@ void camera::getpicture()
 	if (keyptXY.size() == 1)
 	{
 		x = keyptXY.front().x;
-		size = keypts.front().size / 300;
+		size = keypts.front().size / 150;
 		std::cout << "[x,y] = "
 				  << "[" << x << "," << keyptXY.front().y << "]" << size << std::endl;
 		new_pic = true;

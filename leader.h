@@ -49,6 +49,8 @@ public:
     void printlog();
     //Takes the logged route to food and reverse it
     void reverse_Motor_values();
+    // calculate left and right
+    void blob_left_right(float &left, float &right);
     //Dance party
     void hooked_on_a_feeling();
 };

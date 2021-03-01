@@ -46,6 +46,8 @@ public:
     void printlog();
     //Take the logged data and reverse it
     void reverse_Motor_values();
+    // calculate left and right
+    void blob_left_right(float &left, float &right);
     //Dance party
     void hooked_On_A_Feeling();
 };

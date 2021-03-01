@@ -17,16 +17,7 @@ void leader::find_Food()
         cv::waitKey(27);
         float left = 0, right = 0;
         // Calculate how much the blob is to the left/right of the center
-        if (picam.x < 300)
-        {
-            left = (300 - picam.x) / 300;
-            right = 0;
-        }
-        if (picam.x > 340)
-        {
-            left = 0;
-            right = (picam.x - 340) / 300;
-        }
+        blob_left_right(left, right);
         motor.love(left, right, picam.size, true);
         if (picam.size > 0.85) // When the robot is close enough to the blob
         {
@@ -92,16 +83,7 @@ void leader::make_room()
     cv::waitKey(27);
     float left = 0, right = 0;
     // Calculate how much the blob is to the left/right of the center
-    if (picam.x < 300)
-    {
-        left = (300 - picam.x) / 300;
-        right = 0;
-    }
-    if (picam.x > 340)
-    {
-        left = 0;
-        right = (picam.x - 340) / 300;
-    }
+    blob_left_right(left, right);
     motor.fear(left, right, picam.size, true);
     usleep(2000000);
     motor.stop();
@@ -182,7 +164,7 @@ void leader::reverse_Motor_values()
         std::swap(route_from_food_to_nest[i][0], route_from_food_to_nest[i][1]);
     }
 
-    std::reverse(route_from_food_to_nest.begin(), route_from_food_to_nest.end()); 
+    std::reverse(route_from_food_to_nest.begin(), route_from_food_to_nest.end());
     route_from_food_to_nest.push_back(temp);
 
     for (int i = 0; i < route_from_food_to_nest.size(); i++)
@@ -192,5 +174,19 @@ void leader::reverse_Motor_values()
             std::cout << route_from_food_to_nest.at(i).at(j) << " ";
         }
         std::cout << std::endl;
+    }
+}
+
+void leader::blob_left_right(float &left, float &right)
+{
+    if (picam.x < 150)
+    {
+        left = (150 - picam.x) / 150;
+        right = 0;
+    }
+    if (picam.x > 170)
+    {
+        left = 0;
+        right = (picam.x - 170) / 150;
     }
 }
