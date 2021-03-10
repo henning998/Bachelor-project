@@ -132,5 +132,5 @@ void controller::get_encode_values()
         temp.push_back(right_2);
         encode.push_back(temp);
        // std::cout << "Left: " << left_1 << " " << left_2 << std::endl;
-        //std::cout << "right: " << right_1 << " " << right_2 << std::endl;
+       // std::cout << "right: " << right_1 << " " << right_2 << std::endl;
 }

@@ -1,5 +1,17 @@
 #include "leader.h"
 
+void leader::log_encoder()
+{
+    std::cout << " I am here " << std::endl;
+    controller log_data;
+    while (diff_state == FIND_FOOD)
+    {
+        log_data.get_encode_values();
+    }
+    encoder_values = log_data.encode;
+}
+
+
 leader::leader()
 {
     comm.connecting();
@@ -11,6 +23,7 @@ leader::~leader()
 void leader::find_Food()
 {
     picam.change2red();
+    std::thread log_thread(&leader::log_encoder, this);
     while (true)
     {
         picam.getpicture();
@@ -22,17 +35,28 @@ void leader::find_Food()
         if (picam.size > 0.85) // When the robot is close enough to the blob
         {
             motor.stop(true);
-            usleep(100000);
             get_logging();
-            printlog();
-            motor.turn180();
+            //printlog();
             diff_state = BACK_TO_NEST;
+            usleep(100000);
+            log_thread.join();
+            for (int i = 0; i < encoder_values.size(); i++)
+            {
+                for (int j = 0; j < encoder_values.at(i).size(); j++)
+                {
+                    std::cout << encoder_values.at(i).at(j) << " ";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << "Size of encoder values: " << encoder_values.size()  << std::endl;
+            
             break;
         }
     }
 }
 void leader::back_To_Nest()
 {
+    motor.turn180();
     picam.change2blue();
     reverse_Motor_values();
     // Drive on the logged motor values
@@ -171,9 +195,9 @@ void leader::reverse_Motor_values()
     {
         for (int j = 0; j < route_from_food_to_nest.at(i).size(); j++)
         {
-            std::cout << route_from_food_to_nest.at(i).at(j) << " ";
+         //   std::cout << route_from_food_to_nest.at(i).at(j) << " ";
         }
-        std::cout << std::endl;
+       // std::cout << std::endl;
     }
 }
 

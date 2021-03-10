@@ -19,6 +19,7 @@
 #include <netdb.h>
 #include <cctype>
 #include <chrono>
+#include <thread>
 
 #include <raspicam/raspicam.h>
 

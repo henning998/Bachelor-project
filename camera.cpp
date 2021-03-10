@@ -85,8 +85,8 @@ void camera::getpicture()
 	{
 		x = keyptXY.front().x;
 		size = keypts.front().size / 150;
-		std::cout << "[x,y] = "
-				  << "[" << x << "," << keyptXY.front().y << "]" << size << std::endl;
+		//std::cout << "[x,y] = "
+		//		  << "[" << x << "," << keyptXY.front().y << "]" << size << std::endl;
 		new_pic = true;
 	}
 }

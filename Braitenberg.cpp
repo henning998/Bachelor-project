@@ -1,7 +1,7 @@
 #include "Braitenberg.h"
 
-#define forward 1
-#define backward 0
+#define forward 0
+#define backward 1
 
 Braitenberg::Braitenberg()
 {
@@ -18,11 +18,11 @@ void Braitenberg::love(float left, float right, float dist, bool log) // Input b
     SpeedL = MaxSpeed - (left * MaxSpeed) * centerWeight - (dist * MaxSpeed) * distWeight;
     SpeedR = MaxSpeed - (right * MaxSpeed) * centerWeight - (dist * MaxSpeed) * distWeight;
     // Make sure the robot's wheel can turn
-    if (SpeedR < 18)
+    if (SpeedR < MinSpeed)
     {
         SpeedR = 0;
     }
-    if (SpeedL < 18)
+    if (SpeedL < MinSpeed)
     {
         SpeedL = 0;
     }
@@ -36,13 +36,13 @@ void Braitenberg::fear(float left, float right, float dist, bool log) // Input b
     float SpeedL, SpeedR;
     SpeedL = (left * MaxSpeed) * centerWeight + (dist * MaxSpeed) * distWeight;
     SpeedR = (right * MaxSpeed) * centerWeight + (dist * MaxSpeed) * distWeight;
-    if (SpeedR < 18)
+    if (SpeedR < MinSpeed)
     {
-        SpeedR = 18;
+        SpeedR = MinSpeed;
     }
-    if (SpeedL < 18)
+    if (SpeedL < MinSpeed)
     {
-        SpeedL = 18;
+        SpeedL = MinSpeed;
     }
     Motor.setMotorSpeedDirection(SpeedL, SpeedR, forward, forward, log);
 }
@@ -53,11 +53,11 @@ void Braitenberg::explorer(float left, float right, float dist) // Input between
     float SpeedL, SpeedR;
     SpeedL = MaxSpeed - (right * MaxSpeed) - (dist * MaxSpeed) * distWeight;
     SpeedR = MaxSpeed - (left * MaxSpeed) - (dist * MaxSpeed) * distWeight;
-    if (SpeedR < 18)
+    if (SpeedR < MinSpeed)
     {
         SpeedR = 0;
     }
-    if (SpeedL < 18)
+    if (SpeedL < MinSpeed)
     {
         SpeedL = 0;
     }
@@ -70,13 +70,13 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
     float SpeedL, SpeedR;
     SpeedL = (right * MaxSpeed) * centerWeight + (dist * MaxSpeed) * distWeight;
     SpeedR = (left * MaxSpeed) * centerWeight + (dist * MaxSpeed) * distWeight;
-    if (SpeedR < 18)
+    if (SpeedR < MinSpeed)
     {
-        SpeedR = 18;
+        SpeedR = MinSpeed;
     }
-    if (SpeedL < 18)
+    if (SpeedL < MinSpeed)
     {
-        SpeedL = 18;
+        SpeedL = MinSpeed;
     }
     Motor.setMotorSpeedDirection(SpeedL, SpeedR, forward, forward);
 }
@@ -84,8 +84,8 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
 void Braitenberg::turn180()
 {
     //Turn to the right
-    Motor.setLeftMotorSpeedDirection(20, forward);
-    Motor.setRightMotorSpeedDirection(20, backward);
+    Motor.setLeftMotorSpeedDirection(MinSpeed, forward);
+    Motor.setRightMotorSpeedDirection(MinSpeed, backward);
     usleep(2650000); // 2,6 sec calculated with trail and error battery 90%-100%
     // usleep(1800000);
     
