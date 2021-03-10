@@ -33,6 +33,11 @@
 #define TB6612_RIGHT_MOTOR_AIN2 10 // (Brown)
 #define TB6612_LEFT_MOTOR_BIN1 6   // (Grey)
 #define TB6612_LEFT_MOTOR_BIN2 4   // (Pink)
+#define MOTOR_ENCODER_LEFT_1 3 
+#define MOTOR_ENCODER_LEFT_2 1
+#define MOTOR_ENCODER_RIGHT_1 2
+#define MOTOR_ENCODER_RIGHT_2 0
+
 
 class controller
 {
@@ -62,6 +67,9 @@ public:
     void logging(int speedL, int speedR, int dirL, int dirR);
     // Return the logged information
     std::vector<std::vector<double>> get_logging();
+
+    void get_encode_values();
+    std::vector<std::vector<int>> encode;
 };
 
 #endif

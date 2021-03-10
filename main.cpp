@@ -8,8 +8,8 @@
 
 int main(int argc, char **argv)
 {
- leader leaderobj;
- leaderobj.run();
+ //leader leaderobj;
+ //leaderobj.run();
   // // Braitenberg temp;
   // //temp.turn180();
 
@@ -22,8 +22,28 @@ int main(int argc, char **argv)
 //   cv::waitKey(27);
 // }
    controller test;
-  test.setLeftMotorSpeedDirection(0, 0);
+
+  // test.setLeftMotorSpeedDirection(100, 0);
+  // test.setRightMotorSpeedDirection(100, 1);
+  // usleep(2540000);
+
+
+  auto timer = std::chrono::steady_clock::now();
+
+  test.setLeftMotorSpeedDirection(100, 1);
+  test.setRightMotorSpeedDirection(100, 1);
+  //usleep(1000000);
+  int i = 0;
+  while (i<10000)
+  {
+    test.get_encode_values();
+    //usleep(60000);
+    i++;
+  }
+    test.setLeftMotorSpeedDirection(0, 0);
   test.setRightMotorSpeedDirection(0, 0);
+  auto end = std::chrono::steady_clock::now();
+  std::cout << std::chrono::duration_cast<std::chrono::duration<double>>(end-timer).count();
 
   return 0;
 }

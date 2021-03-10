@@ -28,6 +28,12 @@ void controller::initGPIOPins(matrix_hal::GPIOControl *gpio)
         gpio->SetFunction(TB6612_LEFT_MOTOR_PWMB, 1); // Pin function as PWM
         gpio->SetMode(TB6612_LEFT_MOTOR_BIN1, 1);
         gpio->SetMode(TB6612_LEFT_MOTOR_BIN2, 1);
+
+        // setup encoder
+        gpio->SetMode(MOTOR_ENCODER_LEFT_1, 0);
+        gpio->SetMode(MOTOR_ENCODER_LEFT_2, 0);
+        gpio->SetMode(MOTOR_ENCODER_RIGHT_1, 0);
+        gpio->SetMode(MOTOR_ENCODER_RIGHT_2, 0);
 }
 
 void controller::setLeftMotorSpeedDirection(int speed, int dir)
@@ -102,7 +108,7 @@ void controller::logging(int speedL, int speedR, int dirL, int dirR)
                 std::chrono::_V2::steady_clock::time_point end = timer;
                 timer = std::chrono::steady_clock::now();
                 time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(timer - end).count();
-                datalog.at(datalog.size() - 1).push_back(time_elapsed); // push it back to the previous motor values 
+                datalog.at(datalog.size() - 1).push_back(time_elapsed); // push it back to the previous motor values
         }
         datalog.push_back(temp);
 }
@@ -110,4 +116,21 @@ void controller::logging(int speedL, int speedR, int dirL, int dirR)
 std::vector<std::vector<double>> controller::get_logging()
 {
         return datalog;
+}
+
+void controller::get_encode_values()
+{
+        int left_1 = gpio.GetGPIOValue(MOTOR_ENCODER_LEFT_1 );
+        int left_2 = gpio.GetGPIOValue(MOTOR_ENCODER_LEFT_2 );
+        int right_1 = gpio.GetGPIOValue(MOTOR_ENCODER_RIGHT_1);
+        int right_2 = gpio.GetGPIOValue(MOTOR_ENCODER_RIGHT_2);
+
+        std::vector<int> temp;
+        temp.push_back(left_1);
+        temp.push_back(left_2);
+        temp.push_back(right_1);
+        temp.push_back(right_2);
+        encode.push_back(temp);
+       // std::cout << "Left: " << left_1 << " " << left_2 << std::endl;
+        //std::cout << "right: " << right_1 << " " << right_2 << std::endl;
 }
