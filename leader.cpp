@@ -3,14 +3,48 @@
 void leader::log_encoder()
 {
     std::cout << " I am here " << std::endl;
+    std::vector<std::future<std::vector<int>>> async_vec;
     controller log_data;
+    int head = 1, tail = 1;
     while (diff_state == FIND_FOOD)
     {
-        log_data.get_encode_values();
+        encoder_values.push_back(log_data.get_encode_values());
+        if (FLAG_FOR_PUSHING_BACK_ENCODE_VALUE == true)
+        {
+            tail = head;
+            head = encoder_values.size();
+            async_vec.emplace_back(std::async(std::launch::async, &leader::tic_count, this, tail, head));
+        }
     }
-    encoder_values = log_data.encode;
+    for (int i = 0; i < async_vec.size(); i++)
+    {
+        std::vector<int> temp;
+        temp = async_vec.at(i).get();
+        left_encoder_tics.push_back(temp.at(0));
+        right_encoder_tics.push_back(temp.at(1));
+    }
+    
 }
 
+std::vector<int> leader::tic_count(int tail, int head)
+{
+    int count_left = 0, count_right = 0;
+    for (int i = tail; i < head; i++)
+    {
+        if (encoder_values.at(i).at(0) != encoder_values.at(i - 1).at(0) || encoder_values.at(i).at(1) != encoder_values.at(i - 1).at(1))
+        {
+            count_left++;
+        }
+        if (encoder_values.at(i).at(2) != encoder_values.at(i - 1).at(2) || encoder_values.at(i).at(3) != encoder_values.at(i - 1).at(3))
+        {
+            count_right++;
+        }
+    }
+    std::vector<int> temp;
+    temp.push_back(count_left);
+    temp.push_back(count_right);
+    return temp;
+}
 
 leader::leader()
 {
@@ -32,6 +66,7 @@ void leader::find_Food()
         // Calculate how much the blob is to the left/right of the center
         blob_left_right(left, right);
         motor.love(left, right, picam.size, true);
+        FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
         if (picam.size > 0.85) // When the robot is close enough to the blob
         {
             motor.stop(true);
@@ -48,8 +83,8 @@ void leader::find_Food()
                 }
                 std::cout << std::endl;
             }
-            std::cout << "Size of encoder values: " << encoder_values.size()  << std::endl;
-            
+            std::cout << "Size of encoder values: " << encoder_values.size() << std::endl;
+
             break;
         }
     }
@@ -195,9 +230,9 @@ void leader::reverse_Motor_values()
     {
         for (int j = 0; j < route_from_food_to_nest.at(i).size(); j++)
         {
-         //   std::cout << route_from_food_to_nest.at(i).at(j) << " ";
+            //   std::cout << route_from_food_to_nest.at(i).at(j) << " ";
         }
-       // std::cout << std::endl;
+        // std::cout << std::endl;
     }
 }
 

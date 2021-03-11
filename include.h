@@ -20,6 +20,8 @@
 #include <cctype>
 #include <chrono>
 #include <thread>
+#include <future>
+#include <list>
 
 #include <raspicam/raspicam.h>
 

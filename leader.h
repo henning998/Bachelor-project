@@ -26,12 +26,16 @@ private:
     std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
     std::vector<std::vector<double>> route_from_food_to_nest; // Logged route from food to nest
     std::vector<std::vector<int>> encoder_values;
+
     std::vector<int> left_encoder_tics;
     std::vector<int> right_encoder_tics;
     std::vector<int> return_left_encoder_values;
     std::vector<int> return_right_encoder_values;
 
+    bool FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
+
     void log_encoder();
+    std::vector<int> tic_count(int tail, int head);
 
 
 public:

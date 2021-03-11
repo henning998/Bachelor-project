@@ -118,7 +118,7 @@ std::vector<std::vector<double>> controller::get_logging()
         return datalog;
 }
 
-void controller::get_encode_values()
+std::vector<int> controller::get_encode_values()
 {
         int left_1 = gpio.GetGPIOValue(MOTOR_ENCODER_LEFT_1 );
         int left_2 = gpio.GetGPIOValue(MOTOR_ENCODER_LEFT_2 );
@@ -130,7 +130,8 @@ void controller::get_encode_values()
         temp.push_back(left_2);
         temp.push_back(right_1);
         temp.push_back(right_2);
-        encode.push_back(temp);
+        
+        return temp;
        // std::cout << "Left: " << left_1 << " " << left_2 << std::endl;
        // std::cout << "right: " << right_1 << " " << right_2 << std::endl;
 }

@@ -68,8 +68,7 @@ public:
     // Return the logged information
     std::vector<std::vector<double>> get_logging();
 
-    void get_encode_values();
-    std::vector<std::vector<int>> encode;
+    std::vector<int> get_encode_values();
 };
 
 #endif

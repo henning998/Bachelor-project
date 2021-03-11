@@ -42,24 +42,7 @@ int main(int argc, char **argv)
   // test.setLeftMotorSpeedDirection(100, 1);
   // test.setRightMotorSpeedDirection(100, 1);
   // //usleep(1000000);
-  double temp;
- 
-  while (temp <= 270000)
-  {
-    test.get_encode_values();
-    temp++;
-  }
-  int count = 0;
-  for (int i = 1; i < test.encode.size(); i++)
-  {
-    if (test.encode.at(i).at(0) != test.encode.at(i-1).at(0) || test.encode.at(i).at(1) != test.encode.at(i-1).at(1))
-    {
-      count++;
-    }
-    
-  }
-  
-  std::cout << "encoder på en hjul omgang: " << count << std::endl;
+
 
 
 
