@@ -8,6 +8,11 @@
 
 int main(int argc, char **argv)
 {
+  controller test;
+
+  test.setled(4, 2, 2, 2);
+  test.setled(13, 2, 2, 2);
+
   //leader leaderobj;
   //leaderobj.run();
   // // Braitenberg temp;
@@ -20,7 +25,6 @@ int main(int argc, char **argv)
   //  temp.getpicture();
   //   cv::waitKey(27);
   // }
-   controller test;
 
   // std::thread thread_logging(&controller::get_encode_values, &test);
 
@@ -29,8 +33,6 @@ int main(int argc, char **argv)
   // // usleep(2540000);
   // thread_logging.join();
   // std::cout << test.encode.size();
-
-
 
   // for (int i = 0; i < test.encode.at(0).size(); i++)
   // {
@@ -42,9 +44,6 @@ int main(int argc, char **argv)
   // test.setLeftMotorSpeedDirection(100, 1);
   // test.setRightMotorSpeedDirection(100, 1);
   // //usleep(1000000);
-
-
-
 
   test.setLeftMotorSpeedDirection(0, 0);
   test.setRightMotorSpeedDirection(0, 0);

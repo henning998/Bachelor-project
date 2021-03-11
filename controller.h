@@ -1,31 +1,30 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <iostream>
-#include <unistd.h>
-#include <matrix_hal/gpio_control.h>
-#include <matrix_hal/matrixio_bus.h>
-
-#include <pigpio.h>
-#include <cmath>
-
-/*
-#define TB6612_RIGHT_MOTOR_PWMA = 12 // (Orange)
-#define TB6612_LEFT_MOTOR_PWMB          13 // (Green)
-#define TB6612_RIGHT_MOTOR_AIN1         16 // (Blue)
-#define TB6612_RIGHT_MOTOR_AIN2         26 // (Brown)
-#define TB6612_LEFT_MOTOR_BIN1          5  // (Grey)
-#define TB6612_LEFT_MOTOR_BIN2          6  // (Pink)
+#include "include.h"
 
 
 
-#define  TB6612_RIGHT_MOTOR_PWMA        13 // (Orange)
-#define  TB6612_LEFT_MOTOR_PWMB         16 // (Green)
-#define  TB6612_RIGHT_MOTOR_AIN1        19 // (Blue)
-#define  TB6612_RIGHT_MOTOR_AIN2        26 // (Brown)
-#define  TB6612_LEFT_MOTOR_BIN1         20 // (Grey)
-#define  TB6612_LEFT_MOTOR_BIN2         21 // (Pink)
-*/
+// Matrix Voice LEDs
+#define MATRIX_LED_R_1 0
+#define MATRIX_LED_R_2 1
+#define MATRIX_LED_R_3 2
+#define MATRIX_LED_R_4 3
+#define MATRIX_LED_R_5 4
+#define MATRIX_LED_R_6 5
+#define MATRIX_LED_R_7 6
+#define MATRIX_LED_R_8 7
+#define MATRIX_LED_R_9 8
+
+#define MATRIX_LED_L_1 9
+#define MATRIX_LED_L_2 10
+#define MATRIX_LED_L_3 11
+#define MATRIX_LED_L_4 12
+#define MATRIX_LED_L_5 13
+#define MATRIX_LED_L_6 14
+#define MATRIX_LED_L_7 15
+#define MATRIX_LED_L_8 16
+#define MATRIX_LED_L_9 17
 
 #define TB6612_RIGHT_MOTOR_PWMA 14 // (Orange)
 #define TB6612_LEFT_MOTOR_PWMB 8   // (Green)
@@ -33,11 +32,10 @@
 #define TB6612_RIGHT_MOTOR_AIN2 10 // (Brown)
 #define TB6612_LEFT_MOTOR_BIN1 6   // (Grey)
 #define TB6612_LEFT_MOTOR_BIN2 4   // (Pink)
-#define MOTOR_ENCODER_LEFT_1 3 
+#define MOTOR_ENCODER_LEFT_1 3
 #define MOTOR_ENCODER_LEFT_2 1
 #define MOTOR_ENCODER_RIGHT_1 2
 #define MOTOR_ENCODER_RIGHT_2 0
-
 
 class controller
 {
@@ -48,6 +46,10 @@ private:
     std::chrono::_V2::steady_clock::time_point timer; // Timer
     // Initialize the GPIO pins as input and output
     void initGPIOPins(matrix_hal::GPIOControl *gpio);
+    // Create EverloopImage object, with size of ledCount
+	matrix_hal::EverloopImage everloop_image;
+	// Create Everloop object
+	matrix_hal::Everloop everloop;
 
 public:
     controller();
@@ -69,6 +71,8 @@ public:
     std::vector<std::vector<double>> get_logging();
 
     std::vector<int> get_encode_values();
+
+    void setled(int led,int r, int g, int b);
 };
 
 #endif

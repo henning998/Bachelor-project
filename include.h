@@ -22,6 +22,7 @@
 #include <thread>
 #include <future>
 #include <list>
+#include <cmath>
 
 #include <raspicam/raspicam.h>
 
@@ -31,5 +32,13 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/core/ocl.hpp>
+
+#include <matrix_hal/gpio_control.h>
+#include <matrix_hal/matrixio_bus.h>
+#include <matrix_hal/everloop.h>
+#include <matrix_hal/everloop_image.h>
+#include <pigpio.h>
+
+
 
 #endif

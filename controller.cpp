@@ -5,6 +5,15 @@ controller::controller()
         // Initialize bus and exit program if error occurs
         if (!bus.Init())
                 std::cout << "error matrix bus, check matrix and restart program" << std::endl;
+
+        // Holds the number of LEDs on MATRIX device
+        int ledCount = bus.MatrixLeds();
+        // Create EverloopImage object, with size of ledCount
+        matrix_hal::EverloopImage temp(ledCount);
+        everloop_image = temp;
+        // Set everloop to use MatrixIOBus bus
+        everloop.Setup(&bus);
+
         // Set gpio to use MatrixIOBus bus
         gpio.Setup(&bus);
 
@@ -12,8 +21,26 @@ controller::controller()
         initGPIOPins(&gpio);
 }
 
+void controller::setled(int led, int r, int g, int b)
+{
+        everloop_image.leds[led].red = r;
+        everloop_image.leds[led].green = g;
+        everloop_image.leds[led].blue = b;
+
+        everloop.Write(&everloop_image);
+}
+
 controller::~controller()
 {
+        for (int i = 0; i < 18; i++)
+        {
+
+                everloop_image.leds[i].red = 0;
+                everloop_image.leds[i].green = 0;
+                everloop_image.leds[i].blue = 0;
+        }
+
+        everloop.Write(&everloop_image);
 }
 
 void controller::initGPIOPins(matrix_hal::GPIOControl *gpio)
@@ -120,8 +147,8 @@ std::vector<std::vector<double>> controller::get_logging()
 
 std::vector<int> controller::get_encode_values()
 {
-        int left_1 = gpio.GetGPIOValue(MOTOR_ENCODER_LEFT_1 );
-        int left_2 = gpio.GetGPIOValue(MOTOR_ENCODER_LEFT_2 );
+        int left_1 = gpio.GetGPIOValue(MOTOR_ENCODER_LEFT_1);
+        int left_2 = gpio.GetGPIOValue(MOTOR_ENCODER_LEFT_2);
         int right_1 = gpio.GetGPIOValue(MOTOR_ENCODER_RIGHT_1);
         int right_2 = gpio.GetGPIOValue(MOTOR_ENCODER_RIGHT_2);
 
@@ -130,8 +157,8 @@ std::vector<int> controller::get_encode_values()
         temp.push_back(left_2);
         temp.push_back(right_1);
         temp.push_back(right_2);
-        
+
         return temp;
-       // std::cout << "Left: " << left_1 << " " << left_2 << std::endl;
-       // std::cout << "right: " << right_1 << " " << right_2 << std::endl;
+        // std::cout << "Left: " << left_1 << " " << left_2 << std::endl;
+        // std::cout << "right: " << right_1 << " " << right_2 << std::endl;
 }
