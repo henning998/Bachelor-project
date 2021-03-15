@@ -158,7 +158,7 @@ std::vector<int> controller::get_encode_values()
         temp.push_back(right_1);
         temp.push_back(right_2);
 
+        //  std::cout << "Left: " << left_1 << " " << left_2 << std::endl;
+        //  std::cout << "right: " << right_1 << " " << right_2 << std::endl;
         return temp;
-        // std::cout << "Left: " << left_1 << " " << left_2 << std::endl;
-        // std::cout << "right: " << right_1 << " " << right_2 << std::endl;
 }

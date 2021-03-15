@@ -15,8 +15,8 @@ int main(int argc, char **argv)
 
   //leader leaderobj;
   //leaderobj.run();
-  // // Braitenberg temp;
-  // //temp.turn180();
+  // Braitenberg temp;
+  // temp.turn180();
 
   //  camera temp;
   //  while (true)
@@ -44,6 +44,69 @@ int main(int argc, char **argv)
   // test.setLeftMotorSpeedDirection(100, 1);
   // test.setRightMotorSpeedDirection(100, 1);
   // //usleep(1000000);
+
+
+  // test.setLeftMotorSpeedDirection(100, 0);
+  // test.setRightMotorSpeedDirection(100, 0);
+  // for(int i = 0; i<10000;i++)
+  // {
+  //   test.get_encode_values();
+  // }
+int tic = 3290;
+  int tics_r = 0, tics_l = 0;
+    std::vector<int> last_run = test.get_encode_values();
+    while (tics_r <= tic || tics_l <= tic) //4523
+    {
+        std::vector<int> temp = test.get_encode_values();
+        // for (int i = 0; i < temp.size(); i++)
+        // {
+        //     std::cout<<temp.at(i) << " " ;
+        // }
+        // std::cout << std::endl;
+        
+        
+        if (temp.at(0) != last_run.at(0) || temp.at(1) != last_run.at(1))
+        {
+            tics_l++;
+        }
+        if (temp.at(2) != last_run.at(2) || temp.at(3) != last_run.at(3))
+        {
+            tics_r++;
+        }
+        last_run = temp;
+        if (tics_r <= tic)
+        {
+          int kloklo = 0;
+          if(tics_r < tics_l)
+          {
+            kloklo = (tics_l - tics_r)*0.33;
+          }
+
+           test.setRightMotorSpeedDirection(65+kloklo, 1);
+        }
+        else
+        {
+            test.setRightMotorSpeedDirection(0, 1);
+        }
+
+        if (tics_l <= tic)
+        {
+          int qwer = 0;
+          if (tics_l < tics_r)
+          {
+            qwer = (tics_r-tics_l)*0.33;
+          }
+          
+            test.setLeftMotorSpeedDirection(65 + qwer, 1);
+        }
+        else
+        {
+            test.setLeftMotorSpeedDirection(0, 1);
+        }
+         std::cout << "tics_l: " << tics_l << " & tics_r: " <<tics_r << std::endl;
+    }
+
+
 
   test.setLeftMotorSpeedDirection(0, 0);
   test.setRightMotorSpeedDirection(0, 0);

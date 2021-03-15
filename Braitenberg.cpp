@@ -83,15 +83,96 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
 
 void Braitenberg::turn180()
 {
+    int tic = 5942;
+
     //Turn to the right
-    Motor.setLeftMotorSpeedDirection(MinSpeed, forward);
-    Motor.setRightMotorSpeedDirection(MinSpeed, backward);
-    usleep(2650000); // 2,6 sec calculated with trail and error battery 90%-100%
-    // usleep(1800000);
-    
-    //Stop
-    Motor.setLeftMotorSpeedDirection(0, forward);
-    Motor.setRightMotorSpeedDirection(0, backward);
+    int tics_r = 0, tics_l = 0;
+    std::vector<int> last_run = Motor.get_encode_values();
+    while (tics_r <= tic || tics_l <= tic) //4523
+    {
+        std::vector<int> temp = Motor.get_encode_values();
+        // for (int i = 0; i < temp.size(); i++)
+        // {
+        //     std::cout<<temp.at(i) << " " ;
+        // }
+        // std::cout << std::endl;
+
+        if (temp.at(0) != last_run.at(0) || temp.at(1) != last_run.at(1))
+        {
+            tics_l++;
+        }
+        if (temp.at(2) != last_run.at(2) || temp.at(3) != last_run.at(3))
+        {
+            tics_r++;
+        }
+        last_run = temp;
+        if (tics_r <= tic)
+        {
+            Motor.setRightMotorSpeedDirection(MinSpeed, forward);
+        }
+        else
+        {
+            Motor.setRightMotorSpeedDirection(0, backward);
+        }
+
+        if (tics_l <= tic)
+        {
+            Motor.setLeftMotorSpeedDirection(MinSpeed, backward);
+        }
+        else
+        {
+            Motor.setLeftMotorSpeedDirection(0, forward);
+        }
+        std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
+    }
+
+    tic = 3290;
+    tics_r = 0, tics_l = 0;
+    last_run = Motor.get_encode_values();
+    while (tics_r <= tic || tics_l <= tic) //4523
+    {
+        std::vector<int> temp = Motor.get_encode_values();
+
+        if (temp.at(0) != last_run.at(0) || temp.at(1) != last_run.at(1))
+        {
+            tics_l++;
+        }
+        if (temp.at(2) != last_run.at(2) || temp.at(3) != last_run.at(3))
+        {
+            tics_r++;
+        }
+        last_run = temp;
+        if (tics_r <= tic)
+        {
+            int difference = 0;
+            if (tics_r < tics_l)
+            {
+                difference = (tics_l - tics_r) * 0.33;
+            }
+
+            Motor.setRightMotorSpeedDirection(65 + difference, 1);
+        }
+        else
+        {
+            Motor.setRightMotorSpeedDirection(0, 1);
+        }
+
+        if (tics_l <= tic)
+        {
+            int difference = 0;
+            if (tics_l < tics_r)
+            {
+                difference = (tics_r - tics_l) * 0.33;
+            }
+
+            Motor.setLeftMotorSpeedDirection(65 + difference, 1);
+        }
+        else
+        {
+            Motor.setLeftMotorSpeedDirection(0, 1);
+        }
+        // std::cout << "tics_l: " << tics_l << " & tics_r: " <<tics_r << std::endl;
+    }
 }
 
 void Braitenberg::stop(bool log)
