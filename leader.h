@@ -5,6 +5,8 @@
 #include "camera.h"
 #include "Braitenberg.h"
 #include "client.h"
+#include "nr3.h"
+#include "utils.h"
 
 class leader
 {
