@@ -6,6 +6,7 @@ void leader::log_encoder()
     std::vector<std::future<std::vector<int>>> async_vec;
     controller log_data;
     int head = 1, tail = 1;
+    std::chrono::_V2::high_resolution_clock::time_point timer = std::chrono::high_resolution_clock::now();
     while (diff_state == FIND_FOOD)
     {
         encoder_values.push_back(log_data.get_encode_values());
@@ -13,7 +14,13 @@ void leader::log_encoder()
         {
             tail = head;
             head = encoder_values.size();
-            async_vec.emplace_back(std::async(std::launch::async, &leader::tic_count, this, tail, head));
+            std::chrono::_V2::high_resolution_clock::time_point end = timer;
+            timer = std::chrono::high_resolution_clock::now();
+            double time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(timer - end).count();
+            timepoint.push_back(time_elapsed);            
+
+            async_vec.push_back(std::async(std::launch::deferred , &leader::tic_count, this, std::ref(tail), std::ref(head)));
+
         }
     }
     for (int i = 0; i < async_vec.size(); i++)
@@ -65,24 +72,24 @@ void leader::find_Food()
         float left = 0, right = 0;
         // Calculate how much the blob is to the left/right of the center
         blob_left_right(left, right);
-        motor.love(left, right, picam.size, true);
+        motor.love(left, right, picam.size);
         FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
         if (picam.size > 0.85) // When the robot is close enough to the blob
         {
-            motor.stop(true);
-            get_logging();
+            motor.stop();
+           // get_logging();
             //printlog();
             diff_state = BACK_TO_NEST;
             usleep(100000);
             log_thread.join();
-            for (int i = 0; i < encoder_values.size(); i++)
-            {
-                for (int j = 0; j < encoder_values.at(i).size(); j++)
-                {
-                    std::cout << encoder_values.at(i).at(j) << " ";
-                }
-                std::cout << std::endl;
-            }
+            // for (int i = 0; i < encoder_values.size(); i++)
+            // {
+            //     for (int j = 0; j < encoder_values.at(i).size(); j++)
+            //     {
+            //         //std::cout << encoder_values.at(i).at(j) << " ";
+            //     }
+            //     //std::cout << std::endl;
+            // }
             std::cout << "Size of encoder values: " << encoder_values.size() << std::endl;
 
             break;
@@ -93,13 +100,13 @@ void leader::back_To_Nest()
 {
     motor.turn180();
     picam.change2blue();
-    reverse_Motor_values();
+    //reverse_Motor_values(); // need
     // Drive on the logged motor values
-    for (int i = 0; i < route_from_food_to_nest.size(); i++)
-    {
-        motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
-        usleep(route_from_food_to_nest.at(i).back() * 1000000); // From sec to mikrosec.
-    }
+    // for (int i = 0; i < route_from_food_to_nest.size(); i++)
+    // {
+    //     motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
+    //     usleep(route_from_food_to_nest.at(i).back() * 1000000); // From sec to mikrosec.
+    // }
     motor.turn180();
     diff_state = CALL_FOLLOWER;
 }
@@ -117,11 +124,11 @@ void leader::guide_Follower()
 {
     picam.change2red();
     // Drive on the logged motor values
-    for (int i = 0; i < route_from_nest_to_food.size(); i++)
-    {
-        motor.set_motor_speed(route_from_nest_to_food.at(i).at(0), route_from_nest_to_food.at(i).at(1));
-        usleep(route_from_nest_to_food.at(i).back() * 1000000); // From sec to mikrosec.
-    }
+    // for (int i = 0; i < route_from_nest_to_food.size(); i++)
+    // {
+    //     motor.set_motor_speed(route_from_nest_to_food.at(i).at(0), route_from_nest_to_food.at(i).at(1));
+    //     usleep(route_from_nest_to_food.at(i).back() * 1000000); // From sec to mikrosec.
+    // }
     while (true)
     {
         usleep(500000); // Sleep so server don't get spammed
@@ -155,31 +162,31 @@ void leader::back_to_nest_again()
 {
     motor.turn180();
     picam.change2blue();
-    reverse_Motor_values();
+    //reverse_Motor_values();
     // Drive on the logged motor values
-    for (int i = 0; i < route_from_food_to_nest.size(); i++)
-    {
-        motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
-        usleep(route_from_food_to_nest.at(i).back() * 1000000); // from sec to mikrosec.
-    }
+    // for (int i = 0; i < route_from_food_to_nest.size(); i++)
+    // {
+    //     motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
+    //     usleep(route_from_food_to_nest.at(i).back() * 1000000); // from sec to mikrosec.
+    // }
     diff_state = HOOKED_ON_A_FEELING;
 }
 
-void leader::get_logging()
-{
-    route_from_nest_to_food = motor.get_logging();
-}
-void leader::printlog()
-{
-    for (int i = 0; i < route_from_nest_to_food.size(); i++)
-    {
-        for (int j = 0; j < route_from_nest_to_food.at(i).size(); j++)
-        {
-            std::cout << route_from_nest_to_food.at(i).at(j) << " ";
-        }
-        std::cout << std::endl;
-    }
-}
+// void leader::get_logging()
+// {
+//     route_from_nest_to_food = motor.get_logging();
+// }
+// void leader::printlog()
+// {
+//     for (int i = 0; i < route_from_nest_to_food.size(); i++)
+//     {
+//         for (int j = 0; j < route_from_nest_to_food.at(i).size(); j++)
+//         {
+//             std::cout << route_from_nest_to_food.at(i).at(j) << " ";
+//         }
+//         std::cout << std::endl;
+//     }
+// }
 
 void leader::run()
 {
@@ -213,28 +220,28 @@ void leader::run()
     }
 }
 
-void leader::reverse_Motor_values()
-{
-    route_from_food_to_nest = route_from_nest_to_food;
-    std::vector<double> temp = route_from_food_to_nest.back();
-    route_from_food_to_nest.pop_back();
-    for (int i = 0; i < route_from_food_to_nest.size(); i++)
-    {
-        std::swap(route_from_food_to_nest[i][0], route_from_food_to_nest[i][1]);
-    }
+// void leader::reverse_Motor_values()
+// {
+//     route_from_food_to_nest = route_from_nest_to_food;
+//     std::vector<double> temp = route_from_food_to_nest.back();
+//     route_from_food_to_nest.pop_back();
+//     for (int i = 0; i < route_from_food_to_nest.size(); i++)
+//     {
+//         std::swap(route_from_food_to_nest[i][0], route_from_food_to_nest[i][1]);
+//     }
 
-    std::reverse(route_from_food_to_nest.begin(), route_from_food_to_nest.end());
-    route_from_food_to_nest.push_back(temp);
+//     std::reverse(route_from_food_to_nest.begin(), route_from_food_to_nest.end());
+//     route_from_food_to_nest.push_back(temp);
 
-    for (int i = 0; i < route_from_food_to_nest.size(); i++)
-    {
-        for (int j = 0; j < route_from_food_to_nest.at(i).size(); j++)
-        {
-            //   std::cout << route_from_food_to_nest.at(i).at(j) << " ";
-        }
-        // std::cout << std::endl;
-    }
-}
+//     for (int i = 0; i < route_from_food_to_nest.size(); i++)
+//     {
+//         for (int j = 0; j < route_from_food_to_nest.at(i).size(); j++)
+//         {
+//             //   std::cout << route_from_food_to_nest.at(i).at(j) << " ";
+//         }
+//         // std::cout << std::endl;
+//     }
+// }
 
 void leader::blob_left_right(float &left, float &right)
 {

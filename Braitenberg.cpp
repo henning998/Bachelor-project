@@ -83,7 +83,7 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
 
 void Braitenberg::turn180()
 {
-    int tic = 5942;
+    int tic = 4523;// 5942;
 
     //Turn to the right
     int tics_r = 0, tics_l = 0;
@@ -123,7 +123,7 @@ void Braitenberg::turn180()
         {
             Motor.setLeftMotorSpeedDirection(0, forward);
         }
-        std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
+        //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
     }
 
     tic = 3290;

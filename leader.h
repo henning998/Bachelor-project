@@ -23,19 +23,21 @@ private:
         HOOKED_ON_A_FEELING
     };
     state diff_state = FIND_FOOD;                             // Set start state
-    std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
-    std::vector<std::vector<double>> route_from_food_to_nest; // Logged route from food to nest
+    // std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
+    // std::vector<std::vector<double>> route_from_food_to_nest; // Logged route from food to nest
     std::vector<std::vector<int>> encoder_values;
 
     std::vector<int> left_encoder_tics;
     std::vector<int> right_encoder_tics;
-    std::vector<int> return_left_encoder_values;
-    std::vector<int> return_right_encoder_values;
+    std::vector<double> timepoint;
+   // std::vector<int> return_left_encoder_values;
+   // std::vector<int> return_right_encoder_values;
 
     bool FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
 
     void log_encoder();
     std::vector<int> tic_count(int tail, int head);
+
 
 
 public:
@@ -56,11 +58,11 @@ public:
     //Main loop controlling all states leader robot can go into
     void run();
     //Getting the loggged data
-    void get_logging();
+  //  void get_logging();
     //Printing the logged data
-    void printlog();
+   // void printlog();
     //Takes the logged route to food and reverse it
-    void reverse_Motor_values();
+   // void reverse_Motor_values();
     // calculate left and right
     void blob_left_right(float &left, float &right);
     //Dance party
