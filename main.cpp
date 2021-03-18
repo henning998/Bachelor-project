@@ -6,15 +6,18 @@
 #include "camera.h"
 #include "follower.h"
 
+
 int main(int argc, char **argv)
 {
+
   controller test;
 
   test.setled(4, 2, 2, 2);
   test.setled(13, 2, 2, 2);
-  std::cout << std::thread::hardware_concurrency() << std::endl;
-  // leader leaderobj;
-  // leaderobj.run();
+  
+  
+  leader leaderobj;
+  leaderobj.run();
   // //leaderobj.find_Food();
   // Braitenberg temp;
   //  temp.turn180();

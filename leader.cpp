@@ -17,10 +17,10 @@ void leader::log_encoder()
             std::chrono::_V2::high_resolution_clock::time_point end = timer;
             timer = std::chrono::high_resolution_clock::now();
             double time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(timer - end).count();
-            timepoint.push_back(time_elapsed);            
+            timepoint.push_back(time_elapsed);
 
-            async_vec.push_back(std::async(std::launch::deferred , &leader::tic_count, this, std::ref(tail), std::ref(head)));
-
+            async_vec.push_back(std::async(std::launch::deferred, &leader::tic_count, this, tail, head));
+            FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
         }
     }
     for (int i = 0; i < async_vec.size(); i++)
@@ -30,7 +30,6 @@ void leader::log_encoder()
         left_encoder_tics.push_back(temp.at(0));
         right_encoder_tics.push_back(temp.at(1));
     }
-    
 }
 
 std::vector<int> leader::tic_count(int tail, int head)
@@ -56,6 +55,8 @@ std::vector<int> leader::tic_count(int tail, int head)
 leader::leader()
 {
     comm.connecting();
+
+    gsl_vector_set_zero(X_Y_Theta);
 }
 
 leader::~leader()
@@ -77,7 +78,7 @@ void leader::find_Food()
         if (picam.size > 0.85) // When the robot is close enough to the blob
         {
             motor.stop();
-           // get_logging();
+            // get_logging();
             //printlog();
             diff_state = BACK_TO_NEST;
             usleep(100000);
@@ -98,20 +99,17 @@ void leader::find_Food()
 }
 void leader::back_To_Nest()
 {
-    motor.turn180();
+    positon_direction();
+    double theta = direction_vector();
+    motor.turn(theta);
     picam.change2blue();
-    //reverse_Motor_values(); // need
-    // Drive on the logged motor values
-    // for (int i = 0; i < route_from_food_to_nest.size(); i++)
-    // {
-    //     motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
-    //     usleep(route_from_food_to_nest.at(i).back() * 1000000); // From sec to mikrosec.
-    // }
-    motor.turn180();
-    diff_state = CALL_FOLLOWER;
+    // NEED TO DRIVE ON ENKODER
+
+    diff_state = HOOKED_ON_A_FEELING;
 }
 void leader::call_Follower()
 {
+    motor.turn();
     usleep(500000);        // Sleep so server don't get spammed
     comm.writing("Ready"); // Ready to start tandem running
     comm.reader();
@@ -160,7 +158,7 @@ void leader::make_room()
 
 void leader::back_to_nest_again()
 {
-    motor.turn180();
+    motor.turn();
     picam.change2blue();
     //reverse_Motor_values();
     // Drive on the logged motor values
@@ -255,4 +253,128 @@ void leader::blob_left_right(float &left, float &right)
         left = 0;
         right = (picam.x - 170) / 150;
     }
+}
+
+void leader::set_rotation_matrix(gsl_matrix &rotationmatrix, int i)
+{
+    double V_l = left_encoder_tics.at(i) / timepoint.at(i);
+    double V_r = right_encoder_tics.at(i) / timepoint.at(i);
+    double omega = (V_r - V_l) / center_of_wheel_base;
+    double dt = timepoint.at(i);
+    // std::cout << "i: " << i << std::endl;
+    // std::cout << "V_l: " << V_l << std::endl;
+    // std::cout << "V_r: " << V_r << std::endl;
+    // std::cout << "Omega: " << omega << std::endl;
+    // std::cout << "dt: " << dt << std::endl;
+    // std::cout << "cos til delta t: " << cos(omega*dt) << std::endl;
+
+    gsl_matrix_set(&rotationmatrix, 0, 0, cos(omega * dt));
+    gsl_matrix_set(&rotationmatrix, 0, 1, -sin(omega * dt));
+    gsl_matrix_set(&rotationmatrix, 0, 2, 0);
+    gsl_matrix_set(&rotationmatrix, 1, 0, sin(omega * dt));
+    gsl_matrix_set(&rotationmatrix, 1, 1, cos(omega * dt));
+    gsl_matrix_set(&rotationmatrix, 1, 2, 0);
+    gsl_matrix_set(&rotationmatrix, 2, 0, 0);
+    gsl_matrix_set(&rotationmatrix, 2, 1, 0);
+    gsl_matrix_set(&rotationmatrix, 2, 2, 1);
+}
+
+void leader::set_translation(gsl_vector &translation, int i)
+{
+    double V_l = left_encoder_tics.at(i) / timepoint.at(i);
+    double V_r = right_encoder_tics.at(i) / timepoint.at(i);
+    double R = (center_of_wheel_base / 2) * ((V_l + V_r) / (V_r - V_l));
+    double ICC_x = gsl_vector_get(X_Y_Theta, 0) - R * sin(gsl_vector_get(X_Y_Theta, 2));
+    double ICC_y = gsl_vector_get(X_Y_Theta, 1) + R * sin(gsl_vector_get(X_Y_Theta, 2));
+
+    // std::cout << "i: " << i << std::endl;
+    // std::cout << "V_l: " << V_l << std::endl;
+    // std::cout << "V_r: " << V_r << std::endl;
+    // std::cout << "R: " << R << std::endl;
+    // std::cout << "ICC_x: " << ICC_x << std::endl;
+    // std::cout << "ICC_y: " << ICC_y << std::endl;
+    std::cout << "x - ICC: " << gsl_vector_get(X_Y_Theta, 0) - ICC_x << std::endl;
+    std::cout << "y - ICC: " << gsl_vector_get(X_Y_Theta, 1) - ICC_y << std::endl;
+    std::cout << "theta: " << gsl_vector_get(X_Y_Theta, 2) << std::endl;
+
+    gsl_vector_set(&translation, 0, gsl_vector_get(X_Y_Theta, 0) - ICC_x);
+    gsl_vector_set(&translation, 1, gsl_vector_get(X_Y_Theta, 1) - ICC_y);
+    gsl_vector_set(&translation, 2, gsl_vector_get(X_Y_Theta, 2));
+}
+
+void leader::set_icc(gsl_vector &ICC, int i)
+{
+    double V_l = left_encoder_tics.at(i) / timepoint.at(i);
+    double V_r = right_encoder_tics.at(i) / timepoint.at(i);
+    double omega = (V_r - V_l) / center_of_wheel_base;
+    double dt = timepoint.at(i);
+    double R = (center_of_wheel_base / 2) * ((V_l + V_r) / (V_r - V_l));
+    double ICC_x = gsl_vector_get(X_Y_Theta, 0) - R * sin(gsl_vector_get(X_Y_Theta, 2));
+    double ICC_y = gsl_vector_get(X_Y_Theta, 1) + R * sin(gsl_vector_get(X_Y_Theta, 2));
+
+    gsl_vector_set(&ICC, 0, ICC_x);
+    gsl_vector_set(&ICC, 1, ICC_y);
+    gsl_vector_set(&ICC, 2, omega * dt);
+}
+
+void leader::positon_direction()
+{
+    // std::cout << "X_Y_Theta, x: " << gsl_vector_get(X_Y_Theta, 0) << std::endl;
+    // std::cout << "X_Y_Theta, y: " << gsl_vector_get(X_Y_Theta, 1) << std::endl;
+    // std::cout << "X_Y_Theta, theta: " << gsl_vector_get(X_Y_Theta, 2) << std::endl;
+    gsl_matrix *rotation_matrix = gsl_matrix_alloc(3, 3);
+    gsl_vector *translation = gsl_vector_alloc(3);
+    gsl_vector *ICC = gsl_vector_alloc(3);
+    for (int i = 0; i < left_encoder_tics.size(); i++)
+    {
+        set_rotation_matrix(*rotation_matrix, i);
+        // for (int i = 0; i < 3; i++)
+        // {
+        //     for (int j = 0; j < 3; j++)
+        //     {
+        //         std::cout << " " << gsl_matrix_get(rotation_matrix, i, j);
+        //     }
+
+        //     std::cout << std::endl;
+        // }
+
+        set_translation(*translation, i);
+        for (int j = 0; j < 3; j++)
+        {
+            std::cout << " " << gsl_vector_get(translation , j);
+        }
+        std::cout << std::endl;
+        set_icc(*ICC, i);
+
+        gsl_blas_dgemv(CblasNoTrans, 1.0, rotation_matrix, translation, 0, X_Y_Theta);
+        gsl_blas_daxpy(1.0, ICC, X_Y_Theta);
+        // std::cout << "X_Y_Theta, x: " << gsl_vector_get(X_Y_Theta, 0) << std::endl;
+        // std::cout << "X_Y_Theta, y: " << gsl_vector_get(X_Y_Theta, 1) << std::endl;
+        // std::cout << "X_Y_Theta, theta: " << gsl_vector_get(X_Y_Theta, 2) << std::endl;
+    }
+    gsl_matrix_free(rotation_matrix);
+    gsl_vector_free(translation);
+    gsl_vector_free(ICC);
+}
+
+double leader::direction_vector()
+{
+
+    tics_from_food_to_nest = sqrt(pow(gsl_vector_get(X_Y_Theta, 0), 2) + pow(gsl_vector_get(X_Y_Theta, 1), 2));
+    //std::cout << "tics from food to nest: " << tics_from_food_to_nest << std::endl;
+
+    double theta_turn, theta_nest_food;
+
+    theta_nest_food = asin(gsl_vector_get(X_Y_Theta, 1) / tics_from_food_to_nest);
+    //std::cout << "theta nest food: " << theta_nest_food << std::endl;
+
+    theta_turn = M_PI + theta_nest_food - gsl_vector_get(X_Y_Theta, 2);
+    // std::cout << "theta_turn: " << theta_turn << std::endl;
+
+    if (theta_turn > M_PI)
+    {
+        theta_turn = theta_turn - 2 * M_PI;
+    }
+
+    return theta_turn;
 }

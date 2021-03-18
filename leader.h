@@ -5,8 +5,6 @@
 #include "camera.h"
 #include "Braitenberg.h"
 #include "client.h"
-#include "nr3.h"
-#include "utils.h"
 
 class leader
 {
@@ -24,7 +22,7 @@ private:
         BACK_TO_NEST_AGAIN,
         HOOKED_ON_A_FEELING
     };
-    state diff_state = FIND_FOOD;                             // Set start state
+    state diff_state = FIND_FOOD; // Set start state
     // std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
     // std::vector<std::vector<double>> route_from_food_to_nest; // Logged route from food to nest
     std::vector<std::vector<int>> encoder_values;
@@ -32,15 +30,24 @@ private:
     std::vector<int> left_encoder_tics;
     std::vector<int> right_encoder_tics;
     std::vector<double> timepoint;
-   // std::vector<int> return_left_encoder_values;
-   // std::vector<int> return_right_encoder_values;
+    // std::vector<int> return_left_encoder_values;
+    // std::vector<int> return_right_encoder_values;
+    int tics_from_food_to_nest = 0;
+
+    double center_of_wheel_base = 6.4;
 
     bool FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
 
     void log_encoder();
     std::vector<int> tic_count(int tail, int head);
 
+    gsl_vector *X_Y_Theta = gsl_vector_alloc(3);
+    void set_rotation_matrix(gsl_matrix &rotationmatrix, int i);
+    void set_translation(gsl_vector &translation, int i);
+    void set_icc(gsl_vector &ICC, int i);
 
+    void positon_direction();
+    double direction_vector();
 
 public:
     leader();
@@ -60,11 +67,11 @@ public:
     //Main loop controlling all states leader robot can go into
     void run();
     //Getting the loggged data
-  //  void get_logging();
+    //  void get_logging();
     //Printing the logged data
-   // void printlog();
+    // void printlog();
     //Takes the logged route to food and reverse it
-   // void reverse_Motor_values();
+    // void reverse_Motor_values();
     // calculate left and right
     void blob_left_right(float &left, float &right);
     //Dance party

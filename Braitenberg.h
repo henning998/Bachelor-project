@@ -27,7 +27,7 @@ public:
     // Get the logged data from controller object
     std::vector<std::vector<double>> get_logging();
     // Turn the robot 180
-    void turn180();
+    void turn(double theta = M_PI);
     // Stop the robot
     void stop(bool log = false); // Log the stop or not
 };

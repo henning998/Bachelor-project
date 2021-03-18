@@ -81,9 +81,10 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
     Motor.setMotorSpeedDirection(SpeedL, SpeedR, forward, forward);
 }
 
-void Braitenberg::turn180()
+void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
 {
-    int tic = 4523;// 5942;
+
+    int tic = (4523 / M_PI) * abs(theta); // 5942;
 
     //Turn to the right
     int tics_r = 0, tics_l = 0;
@@ -106,27 +107,57 @@ void Braitenberg::turn180()
             tics_r++;
         }
         last_run = temp;
-        if (tics_r <= tic)
+        if (theta > 0)
         {
-            Motor.setRightMotorSpeedDirection(MinSpeed, forward);
-        }
-        else
-        {
-            Motor.setRightMotorSpeedDirection(0, backward);
-        }
+            if (tics_r <= tic)
+            {
+                Motor.setRightMotorSpeedDirection(MinSpeed, forward);
+            }
+            else
+            {
+                Motor.setRightMotorSpeedDirection(0, backward);
+            }
 
-        if (tics_l <= tic)
-        {
-            Motor.setLeftMotorSpeedDirection(MinSpeed, backward);
+            if (tics_l <= tic)
+            {
+                Motor.setLeftMotorSpeedDirection(MinSpeed, backward);
+            }
+            else
+            {
+                Motor.setLeftMotorSpeedDirection(0, forward);
+            }
         }
         else
         {
-            Motor.setLeftMotorSpeedDirection(0, forward);
+            if (tics_r <= tic)
+            {
+                Motor.setRightMotorSpeedDirection(MinSpeed, backward);
+            }
+            else
+            {
+                Motor.setRightMotorSpeedDirection(0, backward);
+            }
+
+            if (tics_l <= tic)
+            {
+                Motor.setLeftMotorSpeedDirection(MinSpeed, forward);
+            }
+            else
+            {
+                Motor.setLeftMotorSpeedDirection(0, forward);
+            }
         }
         //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
     }
 
-    tic = 3290;
+    if (theta > M_PI / 2)
+    {
+        tic = 3290 * cos(theta);
+    }
+    else
+    {
+        tic = 0;
+    }
     tics_r = 0, tics_l = 0;
     last_run = Motor.get_encode_values();
     while (tics_r <= tic || tics_l <= tic) //4523

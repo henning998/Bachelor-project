@@ -91,7 +91,7 @@ void follower::follow()
 
 void follower::back_To_Nest()
 {
-    motor.turn180();
+    motor.turn();
     picam.change2blue();
     reverse_Motor_values();
     // Drive on the logged motor values
@@ -105,7 +105,7 @@ void follower::back_To_Nest()
 
 void follower::back_To_Food()
 {
-    motor.turn180();
+    motor.turn();
     picam.change2red();
     // Drive on the logged motor values
     for (int i = 0; i < route_from_nest_to_food.size(); i++)
@@ -118,7 +118,7 @@ void follower::back_To_Food()
 
 void follower::back_To_Nest_Again()
 {
-    motor.turn180();
+    motor.turn();
     picam.change2blue();
     reverse_Motor_values();
     // Drive on the logged motor values

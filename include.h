@@ -39,6 +39,6 @@
 #include <matrix_hal/everloop_image.h>
 #include <pigpio.h>
 
-
+#include <gsl/gsl_linalg.h>
 
 #endif
