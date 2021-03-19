@@ -84,7 +84,8 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
 void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
 {
 
-    int tic = (4523 / M_PI) * abs(theta); // 5942;
+    int tic = (4523 / M_PI) * (abs(theta)) ; // 5942;
+    std::cout << " tic " << tic << std::endl;
 
     //Turn to the right
     int tics_r = 0, tics_l = 0;
@@ -107,7 +108,7 @@ void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
             tics_r++;
         }
         last_run = temp;
-        if (theta > 0)
+        if (theta < 0)
         {
             if (tics_r <= tic)
             {
@@ -150,9 +151,9 @@ void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
         //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
     }
 
-    if (theta > M_PI / 2)
+    if (theta > M_PI / 2 || theta < M_PI/2)
     {
-        tic = 3290 * cos(theta);
+        tic = 3290 * abs(cos(theta));
     }
     else
     {

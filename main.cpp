@@ -12,12 +12,12 @@ int main(int argc, char **argv)
 
   controller test;
 
-  test.setled(4, 2, 2, 2);
-  test.setled(13, 2, 2, 2);
+  test.setled(4, 100, 0, 0);
+  test.setled(13, 100, 0, 0);
   
   
-  leader leaderobj;
-  leaderobj.run();
+  // leader leaderobj;
+  // leaderobj.run();
   // //leaderobj.find_Food();
   // Braitenberg temp;
   //  temp.turn180();

@@ -284,8 +284,12 @@ void leader::set_translation(gsl_vector &translation, int i)
     double V_l = left_encoder_tics.at(i) / timepoint.at(i);
     double V_r = right_encoder_tics.at(i) / timepoint.at(i);
     double R = (center_of_wheel_base / 2) * ((V_l + V_r) / (V_r - V_l));
+    if (V_r - V_l == 0)
+    {
+        R = 0;
+    }
     double ICC_x = gsl_vector_get(X_Y_Theta, 0) - R * sin(gsl_vector_get(X_Y_Theta, 2));
-    double ICC_y = gsl_vector_get(X_Y_Theta, 1) + R * sin(gsl_vector_get(X_Y_Theta, 2));
+    double ICC_y = gsl_vector_get(X_Y_Theta, 1) + R * cos(gsl_vector_get(X_Y_Theta, 2));
 
     // std::cout << "i: " << i << std::endl;
     // std::cout << "V_l: " << V_l << std::endl;
@@ -309,9 +313,13 @@ void leader::set_icc(gsl_vector &ICC, int i)
     double omega = (V_r - V_l) / center_of_wheel_base;
     double dt = timepoint.at(i);
     double R = (center_of_wheel_base / 2) * ((V_l + V_r) / (V_r - V_l));
+    if (V_r - V_l == 0)
+    {
+        R = 0;
+    }
     double ICC_x = gsl_vector_get(X_Y_Theta, 0) - R * sin(gsl_vector_get(X_Y_Theta, 2));
-    double ICC_y = gsl_vector_get(X_Y_Theta, 1) + R * sin(gsl_vector_get(X_Y_Theta, 2));
-
+    double ICC_y = gsl_vector_get(X_Y_Theta, 1) + R * cos(gsl_vector_get(X_Y_Theta, 2));
+    std::cout << "omega " << omega << " dt " << dt <<" * " << omega*dt <<std::endl;
     gsl_vector_set(&ICC, 0, ICC_x);
     gsl_vector_set(&ICC, 1, ICC_y);
     gsl_vector_set(&ICC, 2, omega * dt);
@@ -341,7 +349,7 @@ void leader::positon_direction()
         set_translation(*translation, i);
         for (int j = 0; j < 3; j++)
         {
-            std::cout << " " << gsl_vector_get(translation , j);
+            std::cout << " " << gsl_vector_get(translation, j);
         }
         std::cout << std::endl;
         set_icc(*ICC, i);
@@ -366,10 +374,10 @@ double leader::direction_vector()
     double theta_turn, theta_nest_food;
 
     theta_nest_food = asin(gsl_vector_get(X_Y_Theta, 1) / tics_from_food_to_nest);
-    //std::cout << "theta nest food: " << theta_nest_food << std::endl;
+    std::cout << "theta nest food: " << theta_nest_food << std::endl;
 
-    theta_turn = M_PI + theta_nest_food - gsl_vector_get(X_Y_Theta, 2);
-    // std::cout << "theta_turn: " << theta_turn << std::endl;
+    theta_turn = M_PI + (gsl_vector_get(X_Y_Theta, 2) - theta_nest_food);
+     std::cout << "theta_turn: " << theta_turn << std::endl;
 
     if (theta_turn > M_PI)
     {
