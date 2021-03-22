@@ -99,13 +99,13 @@ void leader::find_Food()
 }
 void leader::back_To_Nest()
 {
-    positon_direction();
+    position_direction();
     double theta = direction_vector();
     motor.turn(theta);
     picam.change2blue();
     // NEED TO DRIVE ON ENKODER
 
-    diff_state = HOOKED_ON_A_FEELING;
+    diff_state = CALL_FOLLOWER;
 }
 void leader::call_Follower()
 {
@@ -319,13 +319,13 @@ void leader::set_icc(gsl_vector &ICC, int i)
     }
     double ICC_x = gsl_vector_get(X_Y_Theta, 0) - R * sin(gsl_vector_get(X_Y_Theta, 2));
     double ICC_y = gsl_vector_get(X_Y_Theta, 1) + R * cos(gsl_vector_get(X_Y_Theta, 2));
-    std::cout << "omega " << omega << " dt " << dt <<" * " << omega*dt <<std::endl;
+    std::cout << "omega " << omega << " dt " << dt << " * " << omega * dt << std::endl;
     gsl_vector_set(&ICC, 0, ICC_x);
     gsl_vector_set(&ICC, 1, ICC_y);
     gsl_vector_set(&ICC, 2, omega * dt);
 }
 
-void leader::positon_direction()
+void leader::position_direction()
 {
     // std::cout << "X_Y_Theta, x: " << gsl_vector_get(X_Y_Theta, 0) << std::endl;
     // std::cout << "X_Y_Theta, y: " << gsl_vector_get(X_Y_Theta, 1) << std::endl;
@@ -377,7 +377,7 @@ double leader::direction_vector()
     std::cout << "theta nest food: " << theta_nest_food << std::endl;
 
     theta_turn = M_PI + (gsl_vector_get(X_Y_Theta, 2) - theta_nest_food);
-     std::cout << "theta_turn: " << theta_turn << std::endl;
+    std::cout << "theta_turn: " << theta_turn << std::endl;
 
     if (theta_turn > M_PI)
     {
@@ -385,4 +385,60 @@ double leader::direction_vector()
     }
 
     return theta_turn;
+}
+
+void leader::go_straight()
+{
+    int tics_r = 0, tics_l = 0;
+    controller log_encode;
+    std::vector<int> last_run = log_encode.get_encode_values();
+    while (tics_r <= tics_from_food_to_nest || tics_l <= tics_from_food_to_nest) //4523
+    {
+        std::vector<int> temp = log_encode.get_encode_values();
+        // for (int i = 0; i < temp.size(); i++)
+        // {
+        //     std::cout<<temp.at(i) << " " ;
+        // }
+        // std::cout << std::endl;
+
+        if (temp.at(0) != last_run.at(0) || temp.at(1) != last_run.at(1))
+        {
+            tics_l++;
+        }
+        if (temp.at(2) != last_run.at(2) || temp.at(3) != last_run.at(3))
+        {
+            tics_r++;
+        }
+        last_run = temp;
+        if (tics_r <= tics_from_food_to_nest)
+        {
+            int diff_r = 0;
+            if (tics_r < tics_l)
+            {
+                diff_r = (tics_l - tics_r) * 0.33;
+            }
+
+            log_encode.setRightMotorSpeedDirection(65 + diff_r, 1);
+        }
+        else
+        {
+            log_encode.setRightMotorSpeedDirection(0, 1);
+        }
+
+        if (tics_l <= tics_from_food_to_nest)
+        {
+            int diff_l = 0;
+            if (tics_l < tics_r)
+            {
+                diff_l = (tics_r - tics_l) * 0.33;
+            }
+
+            log_encode.setLeftMotorSpeedDirection(65 + diff_l, 1);
+        }
+        else
+        {
+            log_encode.setLeftMotorSpeedDirection(0, 1);
+        }
+        std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
+    }
 }

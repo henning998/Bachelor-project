@@ -46,8 +46,9 @@ private:
     void set_translation(gsl_vector &translation, int i);
     void set_icc(gsl_vector &ICC, int i);
 
-    void positon_direction();
+    void position_direction();
     double direction_vector();
+    void go_straight();
 
 public:
     leader();
