@@ -35,7 +35,7 @@ private:
 	void BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color, bool filterarea, int minimumArea, int maximumArea, cv::SimpleBlobDetector::Params *sbdPar);
 
 public:
-	float x = 160, size = -1; // Hold the x-coordinate and the size of the blob
+	float x = 160, size = 0; // Hold the x-coordinate and the size of the blob
 	bool new_pic = false;	  // Is there a new blob detected, in the newest image
 	// Handle setup of everything related to the camera
 	camera();

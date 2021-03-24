@@ -14,6 +14,7 @@ Braitenberg::~Braitenberg()
 //Love left sensor -> (-) left motor , right sensor -> (-) right motor
 void Braitenberg::love(float left, float right, float dist, bool log) // Input between 0-1
 {
+    std::cout << "left right dist " << left << " " << right << " " << dist <<std::endl;
     float SpeedL, SpeedR;
     SpeedL = MaxSpeed - (left * MaxSpeed) * centerWeight - (dist * MaxSpeed) * distWeight;
     SpeedR = MaxSpeed - (right * MaxSpeed) * centerWeight - (dist * MaxSpeed) * distWeight;
@@ -27,6 +28,7 @@ void Braitenberg::love(float left, float right, float dist, bool log) // Input b
         SpeedL = 0;
     }
     // Set the calcualate speed on the robot
+    std::cout << "speedL SpeedR " << SpeedL << " " << SpeedR << std::endl;
     Motor.setMotorSpeedDirection(SpeedL, SpeedR, forward, forward, log);
 }
 

@@ -18,8 +18,8 @@ int main(int argc, char **argv)
   test.setled(13, 100, 0, 0);
   
   
-  leader leaderobj;
-  leaderobj.run();
+  // leader leaderobj;
+  // leaderobj.run();
   // //leaderobj.find_Food();
   // Braitenberg temp;
   //  temp.turn180();
