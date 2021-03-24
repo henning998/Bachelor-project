@@ -1,7 +1,7 @@
 #include "Braitenberg.h"
 
-#define forward 0
-#define backward 1
+#define forward 1
+#define backward 0
 
 Braitenberg::Braitenberg()
 {
@@ -84,7 +84,7 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
 void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
 {
 
-    int tic = (4523 / M_PI) * (abs(theta)) ; // 5942;
+    int tic = (3015 / M_PI) * (abs(theta)) ; // 5942;
     std::cout << " tic " << tic << std::endl;
 
     //Turn to the right
@@ -153,7 +153,7 @@ void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
 
     if (theta > M_PI / 2 || theta < M_PI/2)
     {
-        tic = 3290 * abs(cos(theta));
+        tic = 2193 * abs(cos(theta));
     }
     else
     {
@@ -182,11 +182,11 @@ void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
                 difference = (tics_l - tics_r) * 0.33;
             }
 
-            Motor.setRightMotorSpeedDirection(65 + difference, 1);
+            Motor.setRightMotorSpeedDirection(65 + difference,backward);
         }
         else
         {
-            Motor.setRightMotorSpeedDirection(0, 1);
+            Motor.setRightMotorSpeedDirection(0, backward);
         }
 
         if (tics_l <= tic)
@@ -197,11 +197,11 @@ void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
                 difference = (tics_r - tics_l) * 0.33;
             }
 
-            Motor.setLeftMotorSpeedDirection(65 + difference, 1);
+            Motor.setLeftMotorSpeedDirection(65 + difference, backward);
         }
         else
         {
-            Motor.setLeftMotorSpeedDirection(0, 1);
+            Motor.setLeftMotorSpeedDirection(0, backward);
         }
         // std::cout << "tics_l: " << tics_l << " & tics_r: " <<tics_r << std::endl;
     }

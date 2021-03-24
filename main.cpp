@@ -5,6 +5,8 @@
 #include "leader.h"
 #include "camera.h"
 #include "follower.h"
+#define forward 1
+#define backward 0
 
 
 int main(int argc, char **argv)
@@ -16,8 +18,8 @@ int main(int argc, char **argv)
   test.setled(13, 100, 0, 0);
   
   
-  // leader leaderobj;
-  // leaderobj.run();
+  leader leaderobj;
+  leaderobj.run();
   // //leaderobj.find_Food();
   // Braitenberg temp;
   //  temp.turn180();
@@ -166,7 +168,60 @@ int main(int argc, char **argv)
   //       }
   //        std::cout << "tics_l: " << tics_l << " & tics_r: " <<tics_r << std::endl;
   //   }
+//   int tics_from_food_to_nest = 50000;
 
+//  int tics_r = 0, tics_l = 0;
+//     controller log_encode;
+//     std::vector<int> last_run = log_encode.get_encode_values();
+//     while (tics_r <= tics_from_food_to_nest || tics_l <= tics_from_food_to_nest) //4523
+//     {
+//         std::vector<int> temp = log_encode.get_encode_values();
+//         // for (int i = 0; i < temp.size(); i++)
+//         // {
+//         //     std::cout<<temp.at(i) << " " ;
+//         // }
+//         // std::cout << std::endl;
+
+//         if (temp.at(0) != last_run.at(0) || temp.at(1) != last_run.at(1))
+//         {
+//             tics_l++;
+//         }
+//         if (temp.at(2) != last_run.at(2) || temp.at(3) != last_run.at(3))
+//         {
+//             tics_r++;
+//         }
+//         last_run = temp;
+//         if (tics_r <= tics_from_food_to_nest)
+//         {
+//             int diff_r = 0;
+//             if (tics_r < tics_l)
+//             {
+//                 diff_r = (tics_l - tics_r) * 0.33;
+//             }
+
+//             log_encode.setRightMotorSpeedDirection(65 + diff_r, forward);
+//         }
+//         else
+//         {
+//             log_encode.setRightMotorSpeedDirection(0, forward);
+//         }
+
+//         if (tics_l <= tics_from_food_to_nest)
+//         {
+//             int diff_l = 0;
+//             if (tics_l < tics_r)
+//             {
+//                 diff_l = (tics_r - tics_l) * 0.33;
+//             }
+
+//             log_encode.setLeftMotorSpeedDirection(65 + diff_l, forward);
+//         }
+//         else
+//         {
+//             log_encode.setLeftMotorSpeedDirection(0, forward);
+//         }
+//         std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
+//     }
 
   test.setLeftMotorSpeedDirection(0, 0);
   test.setRightMotorSpeedDirection(0, 0);

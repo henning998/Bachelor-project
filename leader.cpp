@@ -1,5 +1,8 @@
 #include "leader.h"
 
+#define forward 1
+#define backward 0
+
 void leader::log_encoder()
 {
     std::cout << " I am here " << std::endl;
@@ -104,12 +107,13 @@ void leader::back_To_Nest()
     motor.turn(theta);
     picam.change2blue();
     // NEED TO DRIVE ON ENKODER
+    go_straight();
 
+    motor.turn();
     diff_state = CALL_FOLLOWER;
 }
 void leader::call_Follower()
 {
-    motor.turn();
     usleep(500000);        // Sleep so server don't get spammed
     comm.writing("Ready"); // Ready to start tandem running
     comm.reader();
@@ -418,11 +422,11 @@ void leader::go_straight()
                 diff_r = (tics_l - tics_r) * 0.33;
             }
 
-            log_encode.setRightMotorSpeedDirection(65 + diff_r, 1);
+            log_encode.setRightMotorSpeedDirection(65 + diff_r, forward);
         }
         else
         {
-            log_encode.setRightMotorSpeedDirection(0, 1);
+            log_encode.setRightMotorSpeedDirection(0, forward);
         }
 
         if (tics_l <= tics_from_food_to_nest)
@@ -433,11 +437,11 @@ void leader::go_straight()
                 diff_l = (tics_r - tics_l) * 0.33;
             }
 
-            log_encode.setLeftMotorSpeedDirection(65 + diff_l, 1);
+            log_encode.setLeftMotorSpeedDirection(65 + diff_l, forward);
         }
         else
         {
-            log_encode.setLeftMotorSpeedDirection(0, 1);
+            log_encode.setLeftMotorSpeedDirection(0, forward);
         }
         std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
     }
