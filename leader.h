@@ -34,7 +34,7 @@ private:
     // std::vector<int> return_right_encoder_values;
     int tics_from_food_to_nest = 0;
 
-    double center_of_wheel_base = (6.4/20.4)*4200; // Cm to tics
+    double center_of_wheel_base = (6.4/20.4)*2800; // Cm to tics
 
     bool FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
 
