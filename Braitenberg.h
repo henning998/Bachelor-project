@@ -7,10 +7,10 @@ class Braitenberg
 {
 private:
     controller Motor;         // Controller object
-    int MaxSpeed = 75;        // Variable to adjust max speed
-    int MinSpeed = 60;      // Variable to adjust min speed
+    int MaxSpeed = 80;        // Variable to adjust max speed
+    int MinSpeed = 65;      // Variable to adjust min speed
     float centerWeight = 0.4; // Weight for adjusting the importance of the blob being centered
-    float distWeight = 0.35;   // Weight for adjusting the importance of the distance to the blob
+    float distWeight = 0.25;   // Weight for adjusting the importance of the distance to the blob
 public:
     Braitenberg();
     ~Braitenberg();

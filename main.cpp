@@ -21,8 +21,8 @@ int main(int argc, char **argv)
   leader leaderobj;
   leaderobj.run();
   // //leaderobj.find_Food();
-  // Braitenberg temp;
-  //  temp.turn180();
+  //  Braitenberg temp;
+  //   temp.turn();
 
   //  camera temp;
   //  while (true)

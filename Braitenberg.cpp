@@ -86,7 +86,7 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
 void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
 {
 
-    int tic = (3015 / M_PI) * (abs(theta)) ; // 5942;
+    int tic = (3015 / M_PI) * (abs(theta)) ; 
     std::cout << " tic " << tic << std::endl;
 
     //Turn to the right
