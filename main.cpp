@@ -5,8 +5,7 @@
 #include "leader.h"
 #include "camera.h"
 #include "follower.h"
-#define forward 1
-#define backward 0
+
 
 
 int main(int argc, char **argv)
@@ -18,8 +17,8 @@ int main(int argc, char **argv)
   test.setled(13, 100, 0, 0);
   
   
-  // leader leaderobj;
-  // leaderobj.run();
+  leader leaderobj;
+  leaderobj.run();
   // //leaderobj.find_Food();
   //  Braitenberg temp;
   //   temp.turn();

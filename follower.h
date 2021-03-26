@@ -25,6 +25,30 @@ private:
     std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
     std::vector<std::vector<double>> route_from_food_to_nest; // Logged route from food to nest
 
+    std::vector<int> tic_count(int tail, int head);
+    void log_encoder();
+
+    int tics_from_food_to_nest = 0;
+
+    double center_of_wheel_base = (6.4/20.4)*2800; // Cm to tics
+
+    bool FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
+
+        std::vector<std::vector<int>> encoder_values;
+
+    std::vector<int> left_encoder_tics;
+    std::vector<int> right_encoder_tics;
+    std::vector<double> timepoint;
+
+    gsl_vector *X_Y_Theta = gsl_vector_alloc(3);
+
+    void set_rotation_matrix(gsl_matrix &rotationmatrix, int i);
+    void set_translation(gsl_vector &translation, int i);
+    void set_icc(gsl_vector &ICC, int i);
+    void position_direction();
+    double direction_vector();
+    void go_straight();
+
 public:
     follower();
     ~follower();

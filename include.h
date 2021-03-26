@@ -1,6 +1,7 @@
 #ifndef INCLUDE_H
 #define INCLUDE_H
 
+
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -40,5 +41,9 @@
 #include <pigpio.h>
 
 #include <gsl/gsl_linalg.h>
+
+
+#define forward 1
+#define backward 0
 
 #endif

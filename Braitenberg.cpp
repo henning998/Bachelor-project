@@ -1,7 +1,7 @@
 #include "Braitenberg.h"
 
-#define forward 1
-#define backward 0
+// #define forward 1
+// #define backward 0
 
 Braitenberg::Braitenberg()
 {
@@ -14,7 +14,7 @@ Braitenberg::~Braitenberg()
 //Love left sensor -> (-) left motor , right sensor -> (-) right motor
 void Braitenberg::love(float left, float right, float dist, bool log) // Input between 0-1
 {
-    std::cout << "left right dist " << left << " " << right << " " << dist <<std::endl;
+    //std::cout << "left right dist " << left << " " << right << " " << dist <<std::endl;
     float SpeedL, SpeedR;
     SpeedL = MaxSpeed - (left * MaxSpeed) * centerWeight - (dist * MaxSpeed) * distWeight;
     SpeedR = MaxSpeed - (right * MaxSpeed) * centerWeight - (dist * MaxSpeed) * distWeight;
@@ -28,7 +28,7 @@ void Braitenberg::love(float left, float right, float dist, bool log) // Input b
         SpeedL = 0;
     }
     // Set the calcualate speed on the robot
-    std::cout << "speedL SpeedR " << SpeedL << " " << SpeedR << std::endl;
+   // std::cout << "speedL SpeedR " << SpeedL << " " << SpeedR << std::endl;
     Motor.setMotorSpeedDirection(SpeedL, SpeedR, forward, forward, log);
 }
 
@@ -87,7 +87,7 @@ void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
 {
 
     int tic = (3015 / M_PI) * (abs(theta)) ; 
-    std::cout << " tic " << tic << std::endl;
+    //std::cout << " tic " << tic << std::endl;
 
     //Turn to the right
     int tics_r = 0, tics_l = 0;
