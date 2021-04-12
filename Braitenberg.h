@@ -11,6 +11,8 @@ private:
     int MinSpeed = 65;      // Variable to adjust min speed
     float centerWeight = 0.45; // Weight for adjusting the importance of the blob being centered
     float distWeight = 0.2;   // Weight for adjusting the importance of the distance to the blob
+    int turn_tic = 3015;
+    int tic_moveback = 2193;
 public:
     Braitenberg();
     ~Braitenberg();
@@ -30,6 +32,8 @@ public:
     void turn(double theta = M_PI);
     // Stop the robot
     void stop(bool log = false); // Log the stop or not
+    //@return MaxSpeed, MinSpeed, centerweight, distweight, turn_tic
+    std::vector<float> parameters();
 };
 
 #endif

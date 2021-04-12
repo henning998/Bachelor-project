@@ -16,9 +16,13 @@ int main(int argc, char **argv)
   test.setled(4, 100, 0, 0);
   test.setled(13, 100, 0, 0);
   
+  // Braitenberg brait;
+  // camera picam;
+  //picam.getpicture();
   
   leader leaderobj;
   leaderobj.run();
+  // leaderobj.file("/home/pi/HenningCasper/test.txt");
   // //leaderobj.find_Food();
   //  Braitenberg temp;
   //   temp.turn();

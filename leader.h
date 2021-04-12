@@ -9,6 +9,7 @@
 class leader
 {
 private:
+    bool run_leader = true;
     camera picam;      // Camera object
     Braitenberg motor; // Braitenberg object
     client comm;       // Client object
@@ -32,6 +33,8 @@ private:
     std::vector<double> timepoint;
     // std::vector<int> return_left_encoder_values;
     // std::vector<int> return_right_encoder_values;
+    double theta_param = 0.0;
+    
     int tics_from_food_to_nest = 0;
 
     double center_of_wheel_base = (6.4/20.4)*2800; // Cm to tics
@@ -49,6 +52,7 @@ private:
     void position_direction();
     double direction_vector();
     void go_straight();
+    
 
 public:
     leader();
@@ -75,6 +79,7 @@ public:
     // void reverse_Motor_values();
     // calculate left and right
     void blob_left_right(float &left, float &right);
+    void file(std::string file_name);
     //Dance party
     void hooked_on_a_feeling();
 };

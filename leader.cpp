@@ -1,7 +1,5 @@
 #include "leader.h"
 
-
-
 void leader::log_encoder()
 {
     std::cout << " In log encoder " << std::endl;
@@ -109,7 +107,7 @@ void leader::back_To_Nest()
     go_straight();
 
     motor.turn();
-    diff_state = CALL_FOLLOWER;
+    diff_state = HOOKED_ON_A_FEELING; //CALL_FOLLOWER
 }
 void leader::call_Follower()
 {
@@ -191,7 +189,7 @@ void leader::back_to_nest_again()
 
 void leader::run()
 {
-    while (true)
+    while (run_leader)
     {
         switch (diff_state)
         {
@@ -214,6 +212,8 @@ void leader::run()
             back_to_nest_again();
             break;
         case HOOKED_ON_A_FEELING:
+            file("/home/pi/HenningCasper/leader0.txt");
+            run_leader = false;
             break;
         default:
             break;
@@ -370,7 +370,7 @@ void leader::position_direction()
 
 double leader::direction_vector()
 {
-
+    theta_param = 0.0;
     tics_from_food_to_nest = sqrt(pow(gsl_vector_get(X_Y_Theta, 0), 2) + pow(gsl_vector_get(X_Y_Theta, 1), 2));
     //std::cout << "tics from food to nest: " << tics_from_food_to_nest << std::endl;
 
@@ -386,6 +386,8 @@ double leader::direction_vector()
     {
         theta_turn = theta_turn - 2 * M_PI;
     }
+
+    theta_param = theta_turn;
 
     return theta_turn;
 }
@@ -443,5 +445,29 @@ void leader::go_straight()
             log_encode.setLeftMotorSpeedDirection(0, forward);
         }
         //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
+    }
+}
+
+void leader::file(std::string file_name)
+{
+    std::ofstream my_file(file_name);
+    std::vector<float> param = motor.parameters();
+    my_file << "Braitenberg parameters \n";
+    my_file << "MaxSpeed: " << param.at(0) << "\n";
+    my_file << "MinSpeed: " << param.at(1) << "\n";
+    my_file << "centerweight: " << param.at(2) << "\n";
+    my_file << "distweight: " << param.at(3) << "\n";
+    my_file << "turn_tic: " << param.at(4) << "\n";
+    my_file << "Max tics to move back: " << param.at(5) << "\n";
+    my_file << "Actual tics moved back: " << param.at(5) * abs(cos(theta_param)) << "\n\n";
+
+    my_file << "Leader parameters \n";
+    my_file << "Theta (how much the robot turn): " << theta_param << "\n";
+    my_file << "Tics from food to nest: " << tics_from_food_to_nest << "\n\n";
+
+    my_file << "Encoder shift \n";
+    for (int i = 0; i < left_encoder_tics.size(); i++)
+    {
+        my_file << "Left: " << left_encoder_tics.at(i) << " Right: " << right_encoder_tics.at(i) << " Time: " << timepoint.at(i) << "\n";
     }
 }

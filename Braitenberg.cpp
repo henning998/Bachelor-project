@@ -86,7 +86,7 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
 void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
 {
 
-    int tic = (3015 / M_PI) * (abs(theta)) ; 
+    int tic = (turn_tic / M_PI) * (abs(theta)) ; 
     //std::cout << " tic " << tic << std::endl;
 
     //Turn to the right
@@ -155,7 +155,7 @@ void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
 
     if (theta > M_PI / 2 || theta < M_PI/2)
     {
-        tic = 2193 * abs(cos(theta));
+        tic = tic_moveback * abs(cos(theta));
     }
     else
     {
@@ -220,4 +220,16 @@ std::vector<std::vector<double>> Braitenberg::get_logging()
 void Braitenberg::set_motor_speed(int left, int right)
 {
     Motor.setMotorSpeedDirection(left, right, 1, 1);
+}
+
+std::vector<float> Braitenberg::parameters()
+{
+    std::vector<float> result;
+    result.push_back(MaxSpeed);
+    result.push_back(MinSpeed);
+    result.push_back(centerWeight);
+    result.push_back(distWeight);
+    result.push_back(turn_tic);
+    result.push_back(tic_moveback);
+    return result;
 }
