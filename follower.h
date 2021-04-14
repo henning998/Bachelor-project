@@ -32,11 +32,13 @@ private:
 
     int tics_from_food_to_nest = 0;
 
-    double center_of_wheel_base = (6.4/20.4)*2800; // Cm to tics
+    double center_of_wheel_base = (6.4 / 20.4) * 2800; // Cm to tics
 
     bool FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
 
-        std::vector<std::vector<int>> encoder_values;
+    bool follower_run = true;
+
+    std::vector<std::vector<int>> encoder_values;
 
     std::vector<int> left_encoder_tics;
     std::vector<int> right_encoder_tics;
@@ -49,7 +51,7 @@ private:
     void set_icc(gsl_vector &ICC, int i);
     void position_direction();
     double direction_vector();
-    void go_straight();
+    void go_straight(int tics_to_go);
     void file(std::string file_name);
 
 public:
@@ -57,7 +59,7 @@ public:
     ~follower();
     //Initial state. Waiting for server to find food and get back
     void getting_Ready();
-    //Follow leader to food and see it 
+    //Follow leader to food and see it
     void follow();
     //Turn and go back to nest
     void back_To_Nest();
@@ -68,11 +70,11 @@ public:
     //Main loop that keep track of all states
     void run();
     //Get the logged data
-    void get_logging();
+    //void get_logging();
     //Print the logged data
-    void printlog();
+    //void printlog();
     //Take the logged data and reverse it
-    void reverse_Motor_values();
+    //void reverse_Motor_values();
     // calculate left and right
     void blob_left_right(float &left, float &right);
     //Dance party

@@ -104,7 +104,7 @@ void leader::back_To_Nest()
     motor.turn(theta);
     picam.change2blue();
     // NEED TO DRIVE ON ENKODER
-    go_straight();
+    go_straight(tics_from_food_to_nest);
 
     motor.turn();
     diff_state = HOOKED_ON_A_FEELING; //CALL_FOLLOWER
@@ -128,6 +128,19 @@ void leader::guide_Follower()
     //     motor.set_motor_speed(route_from_nest_to_food.at(i).at(0), route_from_nest_to_food.at(i).at(1));
     //     usleep(route_from_nest_to_food.at(i).back() * 1000000); // From sec to mikrosec.
     // }
+    for (int i = 0; i < 100; i++)
+    {
+        go_straight(tics_from_food_to_nest / 100);
+        while (true)
+        {
+            comm.reader();
+            if (comm.message == "Keep true")
+            {
+                break;
+            }
+        }
+    }
+
     while (true)
     {
         usleep(500000); // Sleep so server don't get spammed
@@ -149,18 +162,24 @@ void leader::make_room()
     float left = 0, right = 0;
     // Calculate how much the blob is to the left/right of the center
     blob_left_right(left, right);
-    motor.fear(left, right, picam.size, true);
-    usleep(2000000);
+    std::thread log_thread(&leader::log_encoder, this);
+    motor.fear(left, right, picam.size);
+    usleep(time_to_fear);
     motor.stop();
+    log_thread.join();
+    position_direction();
+    double theta = direction_vector();
+    motor.turn(theta);
     comm.writing("I have moved");
-    usleep(5000000);
+    usleep(time_to_wait);
     diff_state = BACK_TO_NEST_AGAIN;
 }
 
 void leader::back_to_nest_again()
 {
-    motor.turn();
+    //motor.turn();
     picam.change2blue();
+    go_straight(tics_from_food_to_nest);
     //reverse_Motor_values();
     // Drive on the logged motor values
     // for (int i = 0; i < route_from_food_to_nest.size(); i++)
@@ -392,12 +411,12 @@ double leader::direction_vector()
     return theta_turn;
 }
 
-void leader::go_straight()
+void leader::go_straight(int tics_to_go)
 {
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();
-    while (tics_r <= tics_from_food_to_nest || tics_l <= tics_from_food_to_nest) //4523
+    while (tics_r <= tics_to_go || tics_l <= tics_to_go) //4523
     {
         std::vector<int> temp = log_encode.get_encode_values();
         // for (int i = 0; i < temp.size(); i++)
@@ -415,7 +434,7 @@ void leader::go_straight()
             tics_r++;
         }
         last_run = temp;
-        if (tics_r <= tics_from_food_to_nest)
+        if (tics_r <= tics_to_go)
         {
             int diff_r = 0;
             if (tics_r < tics_l)
@@ -430,7 +449,7 @@ void leader::go_straight()
             log_encode.setRightMotorSpeedDirection(0, forward);
         }
 
-        if (tics_l <= tics_from_food_to_nest)
+        if (tics_l <= tics_to_go)
         {
             int diff_l = 0;
             if (tics_l < tics_r)
@@ -463,6 +482,8 @@ void leader::file(std::string file_name)
 
     my_file << "Leader parameters \n";
     my_file << "Theta (how much the robot turn): " << theta_param << "\n";
+    my_file << "Fear (how much time we fear): " << time_to_fear << "\n";
+    my_file << "Wait (How much time we wait before going back): " << time_to_wait << "\n";
     my_file << "Tics from food to nest: " << tics_from_food_to_nest << "\n\n";
 
     my_file << "Encoder shift \n";

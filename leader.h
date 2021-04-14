@@ -51,8 +51,10 @@ private:
 
     void position_direction();
     double direction_vector();
-    void go_straight();
+    void go_straight(int tics_to_go);
     
+    int time_to_fear = 5000000;
+    int time_to_wait = 10000000;
 
 public:
     leader();
