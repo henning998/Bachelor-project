@@ -1,6 +1,5 @@
 #include "follower.h"
 
-
 void follower::log_encoder()
 {
     std::cout << " In log encoder " << std::endl;
@@ -111,7 +110,6 @@ void follower::follow()
             // Does the leader see the goal
             if (comm.message == "Goal found")
             {
-
                 comm.writing("Okay move");
                 while (diff_state == FOLLOW)
                 {
@@ -132,11 +130,14 @@ void follower::follow()
                                 motor.love(left, right, picam.size, true);
                                 FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
                                 // When the robot see the goal
-                                if (picam.size > 0.35)
+                                if (picam.size > 0.85)
                                 {
                                     motor.stop(true);
-                                    log_thread.join();
+                                    std::cout << "1" << std::endl;
                                     diff_state = BACK_TO_NEST;
+                                    std::cout << "2" << std::endl;
+                                    log_thread.join();
+                                    std::cout << "3" << std::endl;
                                     //get_logging();
                                 }
                             }
@@ -148,7 +149,6 @@ void follower::follow()
             {
                 comm.writing("Keep true");
             }
-            
         }
     }
 }
@@ -275,7 +275,6 @@ void follower::blob_left_right(float &left, float &right)
         right = (picam.x - 170) / 150;
     }
 }
-
 
 void follower::set_rotation_matrix(gsl_matrix &rotationmatrix, int i)
 {

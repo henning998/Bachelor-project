@@ -20,10 +20,10 @@ int main(int argc, char **argv)
   // camera picam;
   //picam.getpicture();
   
-  leader leaderobj;
-  leaderobj.run();
-  // follower followerobj;
-  // followerobj.run();
+  // leader leaderobj;
+  // leaderobj.run();
+  follower followerobj;
+  followerobj.run();
   // leaderobj.file("/home/pi/HenningCasper/test.txt");
   // //leaderobj.find_Food();
   //  Braitenberg temp;

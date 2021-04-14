@@ -167,12 +167,12 @@ void camera::change2blue()
 
 void camera::change2green()
 {
-	iLowH = 65;
-	iHighH = 85;
+	iLowH = 42;
+	iHighH = 86;
 
-	iLowS = 66;
-	iHighS = 170;
+	iLowS = 57;
+	iHighS = 172;
 
-	iLowV = 36;
+	iLowV = 25;
 	iHighV = 255;
 }
