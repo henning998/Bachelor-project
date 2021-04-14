@@ -104,7 +104,7 @@ void follower::follow()
             motor.stop();
         }
         // If the robot are to close
-        if (picam.size > 0.35)
+        if (picam.size > 0.35 && picam.new_pic)
         {
             motor.stop(true);
             comm.reader();

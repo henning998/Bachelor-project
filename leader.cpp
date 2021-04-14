@@ -107,7 +107,7 @@ void leader::back_To_Nest()
     go_straight(tics_from_food_to_nest);
 
     motor.turn();
-    diff_state = HOOKED_ON_A_FEELING; //CALL_FOLLOWER
+    diff_state = CALL_FOLLOWER; //CALL_FOLLOWER
 }
 void leader::call_Follower()
 {
@@ -231,7 +231,7 @@ void leader::run()
             back_to_nest_again();
             break;
         case HOOKED_ON_A_FEELING:
-            file("/home/pi/HenningCasper/leader0.txt");
+            file("/home/pi/HenningCasper/leader02.txt");
             run_leader = false;
             break;
         default:

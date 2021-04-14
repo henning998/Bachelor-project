@@ -170,8 +170,8 @@ void camera::change2green()
 	iLowH = 65;
 	iHighH = 85;
 
-	iLowS = 75;
-	iHighS = 166;
+	iLowS = 66;
+	iHighS = 170;
 
 	iLowV = 36;
 	iHighV = 255;
