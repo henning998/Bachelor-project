@@ -44,7 +44,7 @@ private:
     std::vector<int> right_encoder_tics;
     std::vector<double> timepoint;
 
-    gsl_vector *X_Y_Theta = gsl_vector_alloc(3);
+    gsl_vector *X_Y_Theta = gsl_vector_alloc(3); // Position and direction
 
     void set_rotation_matrix(gsl_matrix &rotationmatrix, int i);
     void set_translation(gsl_vector &translation, int i);
@@ -52,7 +52,7 @@ private:
     void position_direction();
     double direction_vector();
     void go_straight(int tics_to_go);
-    void file(std::string file_name);
+    void file(std::string file_name); // Log parameters 
 
 public:
     follower();

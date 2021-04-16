@@ -3,11 +3,11 @@
 void leader::log_encoder()
 {
     std::cout << " In log encoder " << std::endl;
-    std::vector<std::future<std::vector<int>>> async_vec;
+    std::vector<std::future<std::vector<int>>> async_vec; // Vector storing promises of vectors
     controller log_data;
     int head = 1, tail = 1;
-    std::chrono::_V2::high_resolution_clock::time_point timer = std::chrono::high_resolution_clock::now();
-    while (diff_state == FIND_FOOD)
+    std::chrono::_V2::high_resolution_clock::time_point timer = std::chrono::high_resolution_clock::now(); // Create timer to the current instance
+    while (diff_state == FIND_FOOD)                                                                        //Only run this thread when FOLLOW state is active
     {
         encoder_values.push_back(log_data.get_encode_values());
         if (FLAG_FOR_PUSHING_BACK_ENCODE_VALUE == true)
@@ -19,14 +19,14 @@ void leader::log_encoder()
             double time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(timer - end).count();
             timepoint.push_back(time_elapsed);
 
-            async_vec.push_back(std::async(std::launch::deferred, &leader::tic_count, this, tail, head));
+            async_vec.push_back(std::async(std::launch::deferred, &leader::tic_count, this, tail, head)); // Lazy evaluation to calculate and push back the result of tic_count
             FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
         }
     }
     for (int i = 0; i < async_vec.size(); i++)
     {
         std::vector<int> temp;
-        temp = async_vec.at(i).get();
+        temp = async_vec.at(i).get(); // Evaluation of tic_count
         left_encoder_tics.push_back(temp.at(0));
         right_encoder_tics.push_back(temp.at(1));
     }
@@ -99,15 +99,13 @@ void leader::find_Food()
 }
 void leader::back_To_Nest()
 {
+    picam.change2blue();
     position_direction();
     double theta = direction_vector();
     motor.turn(theta);
-    picam.change2blue();
-    // NEED TO DRIVE ON ENKODER
     go_straight(tics_from_food_to_nest);
-
     motor.turn();
-    diff_state = CALL_FOLLOWER; //CALL_FOLLOWER
+    diff_state = CALL_FOLLOWER;
 }
 void leader::call_Follower()
 {
@@ -177,7 +175,6 @@ void leader::make_room()
 
 void leader::back_to_nest_again()
 {
-    //motor.turn();
     picam.change2blue();
     go_straight(tics_from_food_to_nest);
     //reverse_Motor_values();

@@ -56,11 +56,11 @@ public:
     ~controller();
 
     //Set speed and direction of LEFT motor
-    //@param dir Directiom -> 1 = forward, 0 = reverse
+    //@param dir Direction -> 1 = forward, 0 = reverse
     //@param speed Speed -> 0-100% in steps of 1%
     void setLeftMotorSpeedDirection(int speed, int dir);
     /*Set speed and direction of RIGHT motor
-    @param dir Directiom -> 1 = forward, 0 = reverse
+    @param dir Direction -> 1 = forward, 0 = reverse
     @param speed Speed -> 0-100% in steps of 1%*/
     void setRightMotorSpeedDirection(int speed, int dir);
     // Set the motor speed and diretion for both motors

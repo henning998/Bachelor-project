@@ -1,8 +1,5 @@
 #include "Braitenberg.h"
 
-// #define forward 1
-// #define backward 0
-
 Braitenberg::Braitenberg()
 {
 }
@@ -83,16 +80,16 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
     Motor.setMotorSpeedDirection(SpeedL, SpeedR, forward, forward);
 }
 
-void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
+void Braitenberg::turn(double theta)
 {
 
-    int tic = (turn_tic / M_PI) * (abs(theta)) ; 
+    int tic = (turn_tic / M_PI) * (abs(theta)) ; //radians to tics to turn
     //std::cout << " tic " << tic << std::endl;
 
     //Turn to the right
     int tics_r = 0, tics_l = 0;
     std::vector<int> last_run = Motor.get_encode_values();
-    while (tics_r <= tic || tics_l <= tic) //4523
+    while (tics_r <= tic || tics_l <= tic)
     {
         std::vector<int> temp = Motor.get_encode_values();
         // for (int i = 0; i < temp.size(); i++)
@@ -153,7 +150,7 @@ void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
         //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
     }
 
-    if (theta > M_PI / 2 || theta < M_PI/2)
+    if (theta > M_PI / 2 || theta < -M_PI/2) // NEED TO CHECK IF - SHOULD BE THERE OR NOT
     {
         tic = tic_moveback * abs(cos(theta));
     }
@@ -163,7 +160,7 @@ void Braitenberg::turn(double theta) // NEED UPDATE TO TURN BOTH WAY
     }
     tics_r = 0, tics_l = 0;
     last_run = Motor.get_encode_values();
-    while (tics_r <= tic || tics_l <= tic) //4523
+    while (tics_r <= tic || tics_l <= tic) 
     {
         std::vector<int> temp = Motor.get_encode_values();
 

@@ -2,12 +2,12 @@
 
 void follower::log_encoder()
 {
-    std::cout << " In log encoder " << std::endl;
-    std::vector<std::future<std::vector<int>>> async_vec;
+    //std::cout << " In log encoder " << std::endl;
+    std::vector<std::future<std::vector<int>>> async_vec; // Vector storing promises of vectors
     controller log_data;
     int head = 1, tail = 1;
-    std::chrono::_V2::high_resolution_clock::time_point timer = std::chrono::high_resolution_clock::now();
-    while (diff_state == FOLLOW)
+    std::chrono::_V2::high_resolution_clock::time_point timer = std::chrono::high_resolution_clock::now(); // Create timer to the current instance
+    while (diff_state == FOLLOW)                                                                           // only run this thread when FOLLOW state is active
     {
         encoder_values.push_back(log_data.get_encode_values());
         if (FLAG_FOR_PUSHING_BACK_ENCODE_VALUE == true)
@@ -19,14 +19,14 @@ void follower::log_encoder()
             double time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(timer - end).count();
             timepoint.push_back(time_elapsed);
 
-            async_vec.push_back(std::async(std::launch::deferred, &follower::tic_count, this, tail, head));
+            async_vec.push_back(std::async(std::launch::deferred, &follower::tic_count, this, tail, head)); // Lazy evaluation to calculate and push back the result of tic_count
             FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
         }
     }
     for (int i = 0; i < async_vec.size(); i++)
     {
         std::vector<int> temp;
-        temp = async_vec.at(i).get();
+        temp = async_vec.at(i).get(); // Evaluation of tic_count
         left_encoder_tics.push_back(temp.at(0));
         right_encoder_tics.push_back(temp.at(1));
     }
@@ -133,11 +133,8 @@ void follower::follow()
                                 if (picam.size > 0.85)
                                 {
                                     motor.stop(true);
-                                    std::cout << "1" << std::endl;
                                     diff_state = BACK_TO_NEST;
-                                    std::cout << "2" << std::endl;
                                     log_thread.join();
-                                    std::cout << "3" << std::endl;
                                     //get_logging();
                                 }
                             }
@@ -155,11 +152,11 @@ void follower::follow()
 
 void follower::back_To_Nest()
 {
+    picam.change2blue();
     position_direction();
     double theta = direction_vector();
     motor.turn(theta);
     go_straight(tics_from_food_to_nest);
-    picam.change2blue();
     //reverse_Motor_values();
     // Drive on the logged motor values
     // for (int i = 0; i < route_from_food_to_nest.size(); i++)
@@ -172,9 +169,9 @@ void follower::back_To_Nest()
 
 void follower::back_To_Food()
 {
+    picam.change2red();
     motor.turn();
     go_straight(tics_from_food_to_nest);
-    picam.change2red();
     // Drive on the logged motor values
     // for (int i = 0; i < route_from_nest_to_food.size(); i++)
     // {
@@ -186,9 +183,9 @@ void follower::back_To_Food()
 
 void follower::back_To_Nest_Again()
 {
+    picam.change2blue();
     motor.turn();
     go_straight(tics_from_food_to_nest);
-    picam.change2blue();
     // reverse_Motor_values();
     // // Drive on the logged motor values
     // for (int i = 0; i < route_from_food_to_nest.size(); i++)
@@ -233,10 +230,6 @@ void follower::run()
 // void follower::get_logging()
 // {
 //     route_from_nest_to_food = motor.get_logging();
-// }
-
-// void follower::printlog()
-// {
 // }
 
 // void follower::reverse_Motor_values()
