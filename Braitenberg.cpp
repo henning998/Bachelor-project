@@ -149,7 +149,7 @@ void Braitenberg::turn(double theta)
         }
         //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
     }
-
+    usleep(1000000);
     if (theta > M_PI / 2 || theta < -M_PI/2) // NEED TO CHECK IF - SHOULD BE THERE OR NOT
     {
         tic = tic_moveback * abs(cos(theta));
@@ -178,10 +178,10 @@ void Braitenberg::turn(double theta)
             int difference = 0;
             if (tics_r < tics_l)
             {
-                difference = (tics_l - tics_r) * 0.33;
+                difference = (tics_l - tics_r) * 15;
             }
 
-            Motor.setRightMotorSpeedDirection(65 + difference,backward);
+            Motor.setRightMotorSpeedDirection(45+ difference,backward);
         }
         else
         {
@@ -193,10 +193,10 @@ void Braitenberg::turn(double theta)
             int difference = 0;
             if (tics_l < tics_r)
             {
-                difference = (tics_r - tics_l) * 0.33;
+                difference = (tics_r - tics_l) * 15;
             }
 
-            Motor.setLeftMotorSpeedDirection(65 + difference, backward);
+            Motor.setLeftMotorSpeedDirection(45 + difference, backward);
         }
         else
         {

@@ -228,6 +228,7 @@ void leader::run()
             back_to_nest_again();
             break;
         case HOOKED_ON_A_FEELING:
+            go_straight(20889);
             file("/home/pi/HenningCasper/leader02.txt");
             run_leader = false;
             break;
@@ -410,10 +411,12 @@ double leader::direction_vector()
 
 void leader::go_straight(int tics_to_go)
 {
+    float min_speed = motor.parameters().at(1);
+    double PWM_change_factor = 15.0;
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();
-    while (tics_r <= tics_to_go || tics_l <= tics_to_go) //4523
+        while (tics_r <= tics_to_go || tics_l <= tics_to_go) //4523
     {
         std::vector<int> temp = log_encode.get_encode_values();
         // for (int i = 0; i < temp.size(); i++)
@@ -436,7 +439,7 @@ void leader::go_straight(int tics_to_go)
             int diff_r = 0;
             if (tics_r < tics_l)
             {
-                diff_r = (tics_l - tics_r) * 0.33;
+                diff_r = (tics_l - tics_r) * PWM_change_factor;
             }
 
             log_encode.setRightMotorSpeedDirection(65 + diff_r, forward);
@@ -451,7 +454,7 @@ void leader::go_straight(int tics_to_go)
             int diff_l = 0;
             if (tics_l < tics_r)
             {
-                diff_l = (tics_r - tics_l) * 0.33;
+                diff_l = (tics_r - tics_l) * PWM_change_factor;
             }
 
             log_encode.setLeftMotorSpeedDirection(65 + diff_l, forward);
