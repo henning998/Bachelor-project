@@ -32,7 +32,7 @@ private:
 	// Setup camera
 	void setupCamera(int width, int height, bool vert, bool hori, raspicam::RaspiCam *Camera);
 	// Setup blobdetection
-	void BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color, bool filterarea, int minimumArea, int maximumArea, cv::SimpleBlobDetector::Params *sbdPar);
+	void BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color, bool filterarea, int minimumArea, int maximumArea, bool filtercircle, float Circularity, cv::SimpleBlobDetector::Params *sbdPar);
 
 public:
 	float x = 160, size = 0; // Hold the x-coordinate and the size of the blob

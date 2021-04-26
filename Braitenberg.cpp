@@ -181,7 +181,7 @@ void Braitenberg::turn(double theta)
                 difference = (tics_l - tics_r) * 15;
             }
 
-            Motor.setRightMotorSpeedDirection(45+ difference,backward);
+            Motor.setRightMotorSpeedDirection(MinSpeed+ difference,backward);
         }
         else
         {
@@ -196,7 +196,7 @@ void Braitenberg::turn(double theta)
                 difference = (tics_r - tics_l) * 15;
             }
 
-            Motor.setLeftMotorSpeedDirection(45 + difference, backward);
+            Motor.setLeftMotorSpeedDirection(MinSpeed + difference, backward);
         }
         else
         {

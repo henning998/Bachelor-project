@@ -14,7 +14,7 @@ camera::camera()
 	img_buf_len = Camera.getImageTypeSize(raspicam::RASPICAM_FORMAT_BGR);
 	img_buf = new unsigned char[img_buf_len];
 
-	BlobSetup(1, 1000, true, 255, true, 100, 40000, &sbdPara);
+	BlobSetup(1, 1000, true, 255, true, 10, 40000, true, 0.01, &sbdPara);
 	sbd = cv::SimpleBlobDetector::create(sbdPara);
 	cv::namedWindow("HSV controls", cv::WINDOW_NORMAL);
 
@@ -128,7 +128,7 @@ void camera::setupCamera(int width, int height, bool vert, bool hori, raspicam::
 	Camera->setHorizontalFlip(hori); //true
 }
 
-void camera::BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color, bool filterarea, int minimumArea, int maximumArea, cv::SimpleBlobDetector::Params *sbdPar)
+void camera::BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color, bool filterarea, int minimumArea, int maximumArea, bool filtercircle, float Circularity, cv::SimpleBlobDetector::Params *sbdPar)
 {
 	// Change thresholds
 	sbdPar->minThreshold = minThresh; // 1
@@ -141,6 +141,15 @@ void camera::BlobSetup(int minThresh, int maxThresh, bool filtercolor, int color
 	sbdPar->filterByArea = filterarea; // True
 	sbdPar->minArea = minimumArea;	   // 100x100 pixels // 10000
 	sbdPar->maxArea = maximumArea;	   // 400x400 pixels //160000
+	// filter by circularity
+	sbdPar->filterByCircularity = filtercircle;
+	sbdPar->minCircularity = Circularity;
+	// Filter by Convexity
+	sbdPar->filterByConvexity = true;
+	sbdPar->minConvexity = 0.80;
+	// Filter by Inertia
+	sbdPar->filterByInertia = true;
+	sbdPar->minInertiaRatio = 0.01;
 }
 
 void camera::change2red()
