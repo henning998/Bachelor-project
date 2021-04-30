@@ -21,9 +21,9 @@ private:
         GUIDE_FOLLOWER,
         MAKE_ROOM,
         BACK_TO_NEST_AGAIN,
-        HOOKED_ON_A_FEELING
+        TEST
     };
-    state diff_state = HOOKED_ON_A_FEELING; // Set start state
+    state diff_state = TEST; // Set start state
     // std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
     // std::vector<std::vector<double>> route_from_food_to_nest; // Logged route from food to nest
     std::vector<std::vector<int>> encoder_values;

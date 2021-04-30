@@ -91,7 +91,7 @@ void leader::find_Food()
             //     }
             //     //std::cout << std::endl;
             // }
-            std::cout << "Size of encoder values: " << encoder_values.size() << std::endl;
+            //std::cout << "Size of encoder values: " << encoder_values.size() << std::endl;
 
             break;
         }
@@ -184,7 +184,7 @@ void leader::back_to_nest_again()
     //     motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
     //     usleep(route_from_food_to_nest.at(i).back() * 1000000); // from sec to mikrosec.
     // }
-    diff_state = HOOKED_ON_A_FEELING;
+    diff_state = TEST;
 }
 
 // void leader::get_logging()
@@ -227,9 +227,9 @@ void leader::run()
         case BACK_TO_NEST_AGAIN:
             back_to_nest_again();
             break;
-        case HOOKED_ON_A_FEELING:
-            go_straight(20889);
-            file("/home/pi/HenningCasper/leader02.txt");
+        case TEST:
+            go_straight(20500);
+            //file("/home/pi/HenningCasper/leader02.txt");
             run_leader = false;
             break;
         default:
@@ -412,7 +412,7 @@ double leader::direction_vector()
 void leader::go_straight(int tics_to_go)
 {
     float min_speed = motor.parameters().at(1);
-    double PWM_change_factor = 15;
+    double PWM_change_factor = 0.05;
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();
@@ -442,7 +442,7 @@ void leader::go_straight(int tics_to_go)
                 diff_r = (tics_l - tics_r) * PWM_change_factor;
             }
 
-            log_encode.setRightMotorSpeedDirection(65 + diff_r, forward);
+            log_encode.setRightMotorSpeedDirection(min_speed + diff_r, forward);
         }
         else
         {
@@ -457,7 +457,7 @@ void leader::go_straight(int tics_to_go)
                 diff_l = (tics_r - tics_l) * PWM_change_factor;
             }
 
-            log_encode.setLeftMotorSpeedDirection(65 + diff_l, forward);
+            log_encode.setLeftMotorSpeedDirection(min_speed + diff_l, forward);
         }
         else
         {
