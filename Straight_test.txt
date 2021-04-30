@@ -11,7 +11,7 @@ Her er funktionen til at kører "lige" samt det sted funktionen bliver kaldt
     Linje 231: Her bliver go_straight kaldt med et antal tics den skal kører (en hjul omgang er lig 2800 tics og omkredsen er 18.22cm)
     Linje 412: Her begynder go_straight.
     Linje 414: Her hentes MinSpeed fra Braitenberg.h 
-    Linje 415: Den værdi der ændres p pwm hvis der er en forskel på hjulene. I dette tilfælde 0.05, hvilket giver der skal være 20 i forskel fra det ene hjul til det andet.
+    Linje 415: Den værdi der ændres på pwm hvis der er en forskel på hjulene. I dette tilfælde 0.05, hvilket giver der skal være 20 tics i forskel fra det ene hjul til det andet.
 
 main.cpp:
 Laver objekter for både leader og braitenberg klasserne.

@@ -228,7 +228,7 @@ void leader::run()
             back_to_nest_again();
             break;
         case TEST:
-            go_straight(20500);
+            go_straight(20000);// 20500
             //file("/home/pi/HenningCasper/leader02.txt");
             run_leader = false;
             break;
@@ -416,8 +416,11 @@ void leader::go_straight(int tics_to_go)
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();
+    std::vector<double> time;
         while (tics_r <= tics_to_go || tics_l <= tics_to_go) //4523
     {
+        std::chrono::time_point<std::chrono::system_clock> start, end;
+    start = std::chrono::system_clock::now();
         std::vector<int> temp = log_encode.get_encode_values();
         // for (int i = 0; i < temp.size(); i++)
         // {
@@ -440,6 +443,7 @@ void leader::go_straight(int tics_to_go)
             if (tics_r < tics_l)
             {
                 diff_r = (tics_l - tics_r) * PWM_change_factor;
+            //   std::cout << "diff_r: " << diff_r << std::endl;
             }
 
             log_encode.setRightMotorSpeedDirection(min_speed + diff_r, forward);
@@ -455,6 +459,7 @@ void leader::go_straight(int tics_to_go)
             if (tics_l < tics_r)
             {
                 diff_l = (tics_r - tics_l) * PWM_change_factor;
+             //   std::cout << "diff_l: " << diff_l << std::endl;
             }
 
             log_encode.setLeftMotorSpeedDirection(min_speed + diff_l, forward);
@@ -464,7 +469,17 @@ void leader::go_straight(int tics_to_go)
             log_encode.setLeftMotorSpeedDirection(0, forward);
         }
         //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
+        end = std::chrono::system_clock::now();
+        double time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(start - end).count();
+        time.push_back(time_elapsed);
+        //std::cout << "time_elapsed " << time_elapsed << std::endl;
+        //usleep(5);
     }
+    for (int i = 0; i < time.size(); i++)
+    {
+        std::cout << time.at(i) << std::endl;
+    }
+    
 }
 
 void leader::file(std::string file_name)

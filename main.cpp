@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 
   // test.setLeftMotorSpeedDirection(65, backward);
   // test.setRightMotorSpeedDirection(65, forward);
-  // usleep(10000000);
+  usleep(10000000);
     Braitenberg braitenbergobj;
     leader leaderobj;
 
