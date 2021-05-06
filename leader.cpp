@@ -228,7 +228,8 @@ void leader::run()
             back_to_nest_again();
             break;
         case TEST:
-            go_straight(20000);// 20500
+            //go_straight(20000);// 20500
+            find_Food();
             //file("/home/pi/HenningCasper/leader02.txt");
             run_leader = false;
             break;
