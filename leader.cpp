@@ -228,9 +228,9 @@ void leader::run()
             back_to_nest_again();
             break;
         case TEST:
-            go_straight(20000);// 20500
+            //go_straight(20000);// 20500
             //find_Food();
-            //file("/home/pi/HenningCasper/leader02.txt");
+            file("/home/pi/HenningCasper/leader02.txt");
             run_leader = false;
             break;
         default:
@@ -413,7 +413,7 @@ double leader::direction_vector()
 void leader::go_straight(int tics_to_go)
 {
     float min_speed = motor.parameters().at(1);
-    double PWM_change_factor = 0.01; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
+    double PWM_change_factor = 0.1; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();

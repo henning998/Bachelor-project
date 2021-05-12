@@ -82,9 +82,9 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
 
 void Braitenberg::turn(double theta)
 {
-
+    std::cout << "theta:" << theta << std::endl;
     int tic = (turn_tic / M_PI) * (abs(theta)) ; //radians to tics to turn
-    //std::cout << " tic " << tic << std::endl;
+    std::cout << " tic " << tic << std::endl;
 
     //Turn to the right
     int tics_r = 0, tics_l = 0;

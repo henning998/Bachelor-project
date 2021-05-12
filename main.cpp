@@ -24,14 +24,16 @@ int main(int argc, char **argv)
   // test.setLeftMotorSpeedDirection(65, backward);
   // test.setRightMotorSpeedDirection(65, forward);
   //usleep(10000000);
-    Braitenberg braitenbergobj;
-    leader leaderobj;
+  Braitenberg braitenbergobj;
+  leader leaderobj;
+  leaderobj.run();
+    
 
-  for (int i = 0; i < 1; i++)
-  {
-    leaderobj.run();
-    //braitenbergobj.turn();
-  }
+  // for (int i = 0; i < 1; i++)
+  // {
+  //   //leaderobj.run();
+  //   braitenbergobj.turn();
+  // }
 
   // follower followerobj;
   // followerobj.run();
