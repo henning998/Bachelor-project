@@ -102,8 +102,11 @@ void leader::back_To_Nest()
     picam.change2blue();
     position_direction();
     double theta = direction_vector();
+    usleep(1000000);
     motor.turn(theta);
+    usleep(1000000);
     go_straight(tics_from_food_to_nest);
+    usleep(1000000);
     motor.turn();
     diff_state = CALL_FOLLOWER;
 }
@@ -216,6 +219,7 @@ void leader::run()
             back_To_Nest();
             break;
         case CALL_FOLLOWER:
+            file("/home/pi/HenningCasper/leader02.txt");
             call_Follower();
             break;
         case GUIDE_FOLLOWER:
@@ -230,7 +234,6 @@ void leader::run()
         case TEST:
             //go_straight(20000);// 20500
             //find_Food();
-            file("/home/pi/HenningCasper/leader02.txt");
             run_leader = false;
             break;
         default:
@@ -413,7 +416,7 @@ double leader::direction_vector()
 void leader::go_straight(int tics_to_go)
 {
     float min_speed = motor.parameters().at(1);
-    double PWM_change_factor = 0.1; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
+    double PWM_change_factor = 0.01; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();
