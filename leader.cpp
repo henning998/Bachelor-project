@@ -228,8 +228,8 @@ void leader::run()
             back_to_nest_again();
             break;
         case TEST:
-            //go_straight(20000);// 20500
-            find_Food();
+            go_straight(20000);// 20500
+            //find_Food();
             //file("/home/pi/HenningCasper/leader02.txt");
             run_leader = false;
             break;
@@ -413,7 +413,7 @@ double leader::direction_vector()
 void leader::go_straight(int tics_to_go)
 {
     float min_speed = motor.parameters().at(1);
-    double PWM_change_factor = 0.05;
+    double PWM_change_factor = 0.01; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();
@@ -452,6 +452,8 @@ void leader::go_straight(int tics_to_go)
         else
         {
             log_encode.setRightMotorSpeedDirection(0, forward);
+            log_encode.setLeftMotorSpeedDirection(0, forward);
+            tics_l = tics_to_go + 1;
         }
 
         if (tics_l <= tics_to_go)
@@ -468,6 +470,8 @@ void leader::go_straight(int tics_to_go)
         else
         {
             log_encode.setLeftMotorSpeedDirection(0, forward);
+            log_encode.setRightMotorSpeedDirection(0, forward);
+            tics_r = tics_to_go + 1;
         }
         //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
         end = std::chrono::system_clock::now();
@@ -476,10 +480,10 @@ void leader::go_straight(int tics_to_go)
         //std::cout << "time_elapsed " << time_elapsed << std::endl;
         //usleep(5);
     }
-    for (int i = 0; i < time.size(); i++)
-    {
-        std::cout << time.at(i) << std::endl;
-    }
+    // for (int i = 0; i < time.size(); i++)
+    // {
+    //     std::cout << time.at(i) << std::endl;
+    // }
     
 }
 

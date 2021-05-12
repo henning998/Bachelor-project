@@ -159,6 +159,7 @@ void Braitenberg::turn(double theta)
         tic = 0;
     }
     tics_r = 0, tics_l = 0;
+    double PWM_change_factor = 0.01;
     last_run = Motor.get_encode_values();
     while (tics_r <= tic || tics_l <= tic) 
     {
@@ -178,7 +179,7 @@ void Braitenberg::turn(double theta)
             int difference = 0;
             if (tics_r < tics_l)
             {
-                difference = (tics_l - tics_r) * 15;
+                difference = (tics_l - tics_r) * PWM_change_factor;
             }
 
             Motor.setRightMotorSpeedDirection(MinSpeed+ difference,backward);
@@ -186,6 +187,8 @@ void Braitenberg::turn(double theta)
         else
         {
             Motor.setRightMotorSpeedDirection(0, backward);
+            Motor.setLeftMotorSpeedDirection(0, backward);
+            tics_l = tic + 1;
         }
 
         if (tics_l <= tic)
@@ -193,7 +196,7 @@ void Braitenberg::turn(double theta)
             int difference = 0;
             if (tics_l < tics_r)
             {
-                difference = (tics_r - tics_l) * 15;
+                difference = (tics_r - tics_l) * PWM_change_factor;
             }
 
             Motor.setLeftMotorSpeedDirection(MinSpeed + difference, backward);
@@ -201,6 +204,8 @@ void Braitenberg::turn(double theta)
         else
         {
             Motor.setLeftMotorSpeedDirection(0, backward);
+            Motor.setRightMotorSpeedDirection(0, backward);
+            tics_r = tic + 1;
         }
         // std::cout << "tics_l: " << tics_l << " & tics_r: " <<tics_r << std::endl;
     }
