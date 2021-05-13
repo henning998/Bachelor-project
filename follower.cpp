@@ -140,6 +140,11 @@ void follower::follow()
                             }
                         }
                     }
+                    else if (comm.message == "Goal found")
+                    {
+                        comm.writing("Okay move");
+                    }
+                    
                 }
             }
             else
@@ -218,7 +223,7 @@ void follower::run()
             back_To_Nest_Again();
             break;
         case HOOKED_ON_A_FEELING:
-            file("/home/pi/HenningCasper/follower1.txt");
+            file("/home/pi/HenningCasper/follower02.txt");
             follower_run = false;
             break;
         default:
@@ -407,7 +412,7 @@ double follower::direction_vector()
 void follower::go_straight(int tics_to_go)
 {
    float min_speed = motor.parameters().at(1);
-    double PWM_change_factor = 0.01; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
+    double PWM_change_factor = 0.04275; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();

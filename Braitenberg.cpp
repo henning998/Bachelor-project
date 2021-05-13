@@ -159,7 +159,7 @@ void Braitenberg::turn(double theta)
         tic = 0;
     }
     tics_r = 0, tics_l = 0;
-    double PWM_change_factor = 0.01;
+    double PWM_change_factor = 0.04275;
     last_run = Motor.get_encode_values();
     while (tics_r <= tic || tics_l <= tic) 
     {

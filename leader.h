@@ -23,7 +23,7 @@ private:
         BACK_TO_NEST_AGAIN,
         TEST
     };
-    state diff_state = FIND_FOOD; // Set start state 
+    state diff_state = TEST; // Set start state 
     // std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
     // std::vector<std::vector<double>> route_from_food_to_nest; // Logged route from food to nest
     std::vector<std::vector<int>> encoder_values;

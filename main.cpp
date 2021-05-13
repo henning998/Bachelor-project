@@ -29,15 +29,15 @@ int main(int argc, char **argv)
   // leaderobj.run();
   
 
-  for (int i = 0; i < 5; i++)
-  {
-     braitenbergobj.turn();
-     usleep(1000000);
-     //leaderobj.run();
-  }
+  // for (int i = 0; i < 6; i++)
+  // {
+  //    braitenbergobj.turn();
+  //    usleep(1000000);
+  //    //leaderobj.run();
+  // }
 
-  // follower followerobj;
-  // followerobj.run();
+  follower followerobj;
+  followerobj.run();
 
 
   // camera Picam;
