@@ -24,9 +24,9 @@ int main(int argc, char **argv)
   // test.setLeftMotorSpeedDirection(65, backward);
   // test.setRightMotorSpeedDirection(65, forward);
   //usleep(10000000);
-  Braitenberg braitenbergobj;
-  // leader leaderobj;
-  // leaderobj.run();
+  //Braitenberg braitenbergobj;
+  leader leaderobj;
+  leaderobj.run();
   
 
   // for (int i = 0; i < 6; i++)
@@ -36,8 +36,8 @@ int main(int argc, char **argv)
   //    //leaderobj.run();
   // }
 
-  follower followerobj;
-  followerobj.run();
+  // follower followerobj;
+  // followerobj.run();
 
 
   // camera Picam;

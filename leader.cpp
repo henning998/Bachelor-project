@@ -8,7 +8,7 @@ void leader::log_encoder()
     controller log_data;
     int head = 1, tail = 1;
     std::chrono::_V2::high_resolution_clock::time_point timer = std::chrono::high_resolution_clock::now(); // Create timer to the current instance
-    while (diff_state == state_when_started)                                                               //Only run this thread when FOLLOW state is active
+    while (diff_state == state_when_started || diff_state == MAKE_ROOM)                                                               //Only run this thread when FOLLOW state is active
     {
         encoder_values.push_back(log_data.get_encode_values());
         if (FLAG_FOR_PUSHING_BACK_ENCODE_VALUE == true)
@@ -186,7 +186,7 @@ void leader::guide_Follower()
     encoder_values.clear();
     left_encoder_tics.clear();
     right_encoder_tics.clear();
-    std::thread log_thread(&leader::log_encoder, this);
+    leader_extra_thread = std::thread(&leader::log_encoder, this);
     // Drive on the logged motor values
     // for (int i = 0; i < route_from_nest_to_food.size(); i++)
     // {
@@ -235,7 +235,9 @@ void leader::make_room()
     motor.stop();
     FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
     diff_state = BACK_TO_NEST_AGAIN;
-    log_thread.join();
+    
+    leader_extra_thread.join();
+    
     position_direction();
     double theta = direction_vector();
     motor.turn(theta);
@@ -523,7 +525,7 @@ double leader::direction_vector()
 void leader::go_straight(int tics_to_go)
 {
     float min_speed = motor.parameters().at(1);
-    double PWM_change_factor = 0.04275; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
+    double PWM_change_factor = 0.01; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();

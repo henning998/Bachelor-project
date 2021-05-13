@@ -38,6 +38,11 @@ private:
     std::vector<std::vector<double>> timepoint_file;
     // std::vector<int> return_left_encoder_values;
     // std::vector<int> return_right_encoder_values;
+
+
+    std::thread leader_extra_thread;
+
+
     double theta_param = 0.0;
     std::vector<double> theta_file;
     
