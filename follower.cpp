@@ -160,19 +160,21 @@ void follower::back_To_Nest()
     position_direction();
     double theta = direction_vector();
     motor.turn(theta);
-   // go_straight(tics_from_food_to_nest);
+    // go_straight(tics_from_food_to_nest);
     for (int i = 0; i < left_encoder_tics.size(); i++)
     {
-        encoder_tics.push_back(left_encoder_tics.at(i));
-        encoder_tics.push_back(right_encoder_tics.at(i));
+        std::vector<int> temp;
+        temp.push_back(left_encoder_tics.at(i));
+        temp.push_back(right_encoder_tics.at(i));
+        encoder_tics.push_back(temp);
     }
-    encoder_tics_file.push_back(encoder_tics);
+    encode_tics_file.push_back(encoder_tics);
     timepoint_file.push_back(timepoint);
     gsl_vector_set_zero(X_Y_Theta);
     encoder_values.clear();
     left_encoder_tics.clear();
     right_encoder_tics.clear();
-    std::thread log_thread(&leader::log_encoder, this);
+    std::thread log_thread(&follower::log_encoder, this);
     //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
     {
@@ -219,22 +221,23 @@ void follower::back_To_Nest()
 void follower::back_To_Food()
 {
     picam.change2red();
-       position_direction();
+    position_direction();
     double theta = direction_vector();
     motor.turn(theta);
-
-     for (int i = 0; i < left_encoder_tics.size(); i++)
+    for (int i = 0; i < left_encoder_tics.size(); i++)
     {
-        encoder_tics.push_back(left_encoder_tics.at(i));
-        encoder_tics.push_back(right_encoder_tics.at(i));
+        std::vector<int> temp;
+        temp.push_back(left_encoder_tics.at(i));
+        temp.push_back(right_encoder_tics.at(i));
+        encoder_tics.push_back(temp);
     }
-    encoder_tics_file.push_back(encoder_tics);
+    encode_tics_file.push_back(encoder_tics);
     timepoint_file.push_back(timepoint);
     gsl_vector_set_zero(X_Y_Theta);
     encoder_values.clear();
     left_encoder_tics.clear();
     right_encoder_tics.clear();
-    std::thread log_thread(&leader::log_encoder, this);
+    std::thread log_thread(&follower::log_encoder, this);
     //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
     {
@@ -281,21 +284,23 @@ void follower::back_To_Food()
 void follower::back_To_Nest_Again()
 {
     picam.change2blue();
-     position_direction();
+    position_direction();
     double theta = direction_vector();
     motor.turn(theta);
-     for (int i = 0; i < left_encoder_tics.size(); i++)
+    for (int i = 0; i < left_encoder_tics.size(); i++)
     {
-        encoder_tics.push_back(left_encoder_tics.at(i));
-        encoder_tics.push_back(right_encoder_tics.at(i));
+        std::vector<int> temp;
+        temp.push_back(left_encoder_tics.at(i));
+        temp.push_back(right_encoder_tics.at(i));
+        encoder_tics.push_back(temp);
     }
-    encoder_tics_file.push_back(encoder_tics);
+    encode_tics_file.push_back(encoder_tics);
     timepoint_file.push_back(timepoint);
     gsl_vector_set_zero(X_Y_Theta);
     encoder_values.clear();
     left_encoder_tics.clear();
     right_encoder_tics.clear();
-    std::thread log_thread(&leader::log_encoder, this);
+    std::thread log_thread(&follower::log_encoder, this);
     //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
     {
@@ -361,7 +366,7 @@ void follower::run()
             back_To_Nest_Again();
             break;
         case HOOKED_ON_A_FEELING:
-            file("/home/pi/HenningCasper/follower02.txt");
+            file("/home/pi/HenningCasper/follower10.txt");
             follower_run = false;
             break;
         default:
@@ -646,13 +651,13 @@ void follower::file(std::string file_name)
     }
 
     my_file << "Encoder shift (tics): \n";
-    for (int j = 0; j < count; j++)
+    for (int j = 0; j < encode_tics_file.size(); j++)
     {
         my_file << j << ": ";
 
-        for (int i = 0; i < encoder_tics_file[j].size(); i += 2)
+        for (int i = 0; i < encode_tics_file[j].size(); i++)
         {
-            my_file << "Left: " << encoder_tics_file.at(j).at(i) << " Right: " << encoder_tics_file.at(j).at(i + 1) << " Time: " << timepoint_file.at(j).at(i) << "\n";
+            my_file << "Left: " << encode_tics_file[j][i][0] << " Right: " << encode_tics_file[j][i][1] << " Time: " << timepoint_file[j][i] << "\n";
         }
         my_file << "\n\n";
     }

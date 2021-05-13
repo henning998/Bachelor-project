@@ -106,13 +106,14 @@ void leader::back_To_Nest()
     usleep(1000000);
     motor.turn(theta);
     usleep(1000000);
-
     for (int i = 0; i < left_encoder_tics.size(); i++)
     {
-        encoder_tics.push_back(left_encoder_tics.at(i));
-        encoder_tics.push_back(right_encoder_tics.at(i));
+        std::vector<int> temp;
+        temp.push_back(left_encoder_tics.at(i));
+        temp.push_back(right_encoder_tics.at(i));
+        encoder_tics.push_back(temp);
     }
-    encoder_tics_file.push_back(encoder_tics);
+    encode_tics_file.push_back(encoder_tics);
     timepoint_file.push_back(timepoint);
     gsl_vector_set_zero(X_Y_Theta);
     encoder_values.clear();
@@ -175,10 +176,12 @@ void leader::guide_Follower()
     gsl_vector_set_zero(X_Y_Theta);
     for (int i = 0; i < left_encoder_tics.size(); i++)
     {
-        encoder_tics.push_back(left_encoder_tics.at(i));
-        encoder_tics.push_back(right_encoder_tics.at(i));
+        std::vector<int> temp;
+        temp.push_back(left_encoder_tics.at(i));
+        temp.push_back(right_encoder_tics.at(i));
+        encoder_tics.push_back(temp);
     }
-    encoder_tics_file.push_back(encoder_tics);
+    encode_tics_file.push_back(encoder_tics);
     timepoint_file.push_back(timepoint);
     gsl_vector_set_zero(X_Y_Theta);
     encoder_values.clear();
@@ -240,10 +243,12 @@ void leader::make_room()
     comm.writing("I have moved");
     for (int i = 0; i < left_encoder_tics.size(); i++)
     {
-        encoder_tics.push_back(left_encoder_tics.at(i));
-        encoder_tics.push_back(right_encoder_tics.at(i));
+        std::vector<int> temp;
+        temp.push_back(left_encoder_tics.at(i));
+        temp.push_back(right_encoder_tics.at(i));
+        encoder_tics.push_back(temp);
     }
-    encoder_tics_file.push_back(encoder_tics);
+    encode_tics_file.push_back(encoder_tics);
     timepoint_file.push_back(timepoint);
     usleep(time_to_wait);
 }
@@ -615,13 +620,13 @@ void leader::file(std::string file_name)
     }
 
     my_file << "Encoder shift (tics): \n";
-    for (int j = 0; j < count; j++)
+    for (int j = 0; j < encode_tics_file.size(); j++)
     {
         my_file << j << ": ";
 
-        for (int i = 0; i < encoder_tics_file[j].size(); i += 2)
+        for (int i = 0; i < encode_tics_file[j].size(); i++)
         {
-            my_file << "Left: " << encoder_tics_file.at(j).at(i) << " Right: " << encoder_tics_file.at(j).at(i + 1) << " Time: " << timepoint_file.at(j).at(i) << "\n";
+            my_file << "Left: " << encode_tics_file[j][i][0] << " Right: " << encode_tics_file[j][i][1] << " Time: " << timepoint_file[j][i] << "\n";
         }
         my_file << "\n\n";
     }
