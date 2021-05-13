@@ -89,6 +89,7 @@ void camera::getpicture()
 		//		  << "[" << x << "," << keyptXY.front().y << "]" << size << std::endl;
 		new_pic = true;
 	}
+	cv::waitKey(27);
 }
 
 void camera::printParameter(raspicam::RaspiCam Camera)

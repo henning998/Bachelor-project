@@ -173,7 +173,6 @@ void leader::call_Follower()
 void leader::guide_Follower()
 {
     picam.change2red();
-    gsl_vector_set_zero(X_Y_Theta);
     for (int i = 0; i < left_encoder_tics.size(); i++)
     {
         std::vector<int> temp;
@@ -337,7 +336,7 @@ void leader::run()
             back_to_nest_again();
             break;
         case TEST:
-            file("/home/pi/HenningCasper/leader02.txt");
+            file("/home/pi/HenningCasper/leader10.txt");
             //go_straight(20000); // 20500
             //find_Food();
             run_leader = false;
@@ -616,7 +615,7 @@ void leader::file(std::string file_name)
 
     for (int i = 0; i < theta_file.size(); i++)
     {
-        my_file << "Theta (how much the robot turn): " << i << ": "<< theta_file.at(i) << "\n";
+        my_file << "Theta (how much the robot turn): " << i << ": " << theta_file.at(i) << "\n";
     }
 
     for (int i = 0; i < route_length.size(); i++)
