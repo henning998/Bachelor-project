@@ -32,7 +32,9 @@ private:
 
     int tics_from_food_to_nest = 0;
 
-    double center_of_wheel_base = (6.9/18.849) * 2800; // Cm to tics
+    std::vector<int> route_length;
+
+    double center_of_wheel_base = (6.9 / 18.849) * 2800; // Cm to tics
 
     bool FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
 
@@ -40,9 +42,14 @@ private:
 
     std::vector<std::vector<int>> encoder_values;
 
+    std::vector<std::vector<int>> encoder_tics;
+    std::vector<std::vector<std::vector<int>>> encode_tics_file;
+
     std::vector<int> left_encoder_tics;
     std::vector<int> right_encoder_tics;
+
     std::vector<double> timepoint;
+    std::vector<std::vector<double>> timepoint_file;
 
     gsl_vector *X_Y_Theta = gsl_vector_alloc(3); // Position and direction
 
@@ -52,7 +59,7 @@ private:
     void position_direction();
     double direction_vector();
     void go_straight(int tics_to_go);
-    void file(std::string file_name); // Log parameters 
+    void file(std::string file_name); // Log parameters
 
 public:
     follower();
