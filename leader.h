@@ -23,7 +23,7 @@ private:
         BACK_TO_NEST_AGAIN,
         TEST
     };
-    state diff_state = FIND_FOOD; // Set start state
+    state diff_state = FIND_FOOD; // Set start state 
     // std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
     // std::vector<std::vector<double>> route_from_food_to_nest; // Logged route from food to nest
     std::vector<std::vector<int>> encoder_values;
@@ -37,7 +37,7 @@ private:
     
     int tics_from_food_to_nest = 0;
 
-    double center_of_wheel_base = (6.4/20.4)*2800; // Cm to tics
+    double center_of_wheel_base = (6.9/18.849)*2800; // Cm to tics
 
     bool FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = false;
 

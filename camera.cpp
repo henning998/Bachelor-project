@@ -14,7 +14,7 @@ camera::camera()
 	img_buf_len = Camera.getImageTypeSize(raspicam::RASPICAM_FORMAT_BGR);
 	img_buf = new unsigned char[img_buf_len];
 
-	BlobSetup(1, 1000, true, 255, true, 10, 40000, true, 0.01, &sbdPara);
+	BlobSetup(1, 1000, true, 255, true, 100, 40000, true, 0.01, &sbdPara);
 	sbd = cv::SimpleBlobDetector::create(sbdPara);
 	cv::namedWindow("HSV controls", cv::WINDOW_NORMAL);
 

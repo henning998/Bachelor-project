@@ -218,7 +218,7 @@ void follower::run()
             back_To_Nest_Again();
             break;
         case HOOKED_ON_A_FEELING:
-            file("/home/pi/HenningCasper/follower0.txt");
+            file("/home/pi/HenningCasper/follower1.txt");
             follower_run = false;
             break;
         default:
@@ -406,11 +406,16 @@ double follower::direction_vector()
 
 void follower::go_straight(int tics_to_go)
 {
+   float min_speed = motor.parameters().at(1);
+    double PWM_change_factor = 0.01; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();
-    while (tics_r <= tics_to_go || tics_l <= tics_to_go) //4523
+    std::vector<double> time;
+        while (tics_r <= tics_to_go || tics_l <= tics_to_go) //4523
     {
+        std::chrono::time_point<std::chrono::system_clock> start, end;
+    start = std::chrono::system_clock::now();
         std::vector<int> temp = log_encode.get_encode_values();
         // for (int i = 0; i < temp.size(); i++)
         // {
@@ -432,14 +437,17 @@ void follower::go_straight(int tics_to_go)
             int diff_r = 0;
             if (tics_r < tics_l)
             {
-                diff_r = (tics_l - tics_r) * 0.33;
+                diff_r = (tics_l - tics_r) * PWM_change_factor;
+            //   std::cout << "diff_r: " << diff_r << std::endl;
             }
 
-            log_encode.setRightMotorSpeedDirection(65 + diff_r, forward);
+            log_encode.setRightMotorSpeedDirection(min_speed + diff_r, forward);
         }
         else
         {
             log_encode.setRightMotorSpeedDirection(0, forward);
+            log_encode.setLeftMotorSpeedDirection(0, forward);
+            tics_l = tics_to_go + 1;
         }
 
         if (tics_l <= tics_to_go)
@@ -447,17 +455,30 @@ void follower::go_straight(int tics_to_go)
             int diff_l = 0;
             if (tics_l < tics_r)
             {
-                diff_l = (tics_r - tics_l) * 0.33;
+                diff_l = (tics_r - tics_l) * PWM_change_factor;
+             //   std::cout << "diff_l: " << diff_l << std::endl;
             }
 
-            log_encode.setLeftMotorSpeedDirection(65 + diff_l, forward);
+            log_encode.setLeftMotorSpeedDirection(min_speed + diff_l, forward);
         }
         else
         {
             log_encode.setLeftMotorSpeedDirection(0, forward);
+            log_encode.setRightMotorSpeedDirection(0, forward);
+            tics_r = tics_to_go + 1;
         }
         //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
+        end = std::chrono::system_clock::now();
+        double time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(start - end).count();
+        time.push_back(time_elapsed);
+        //std::cout << "time_elapsed " << time_elapsed << std::endl;
+        //usleep(5);
     }
+    // for (int i = 0; i < time.size(); i++)
+    // {
+    //     std::cout << time.at(i) << std::endl;
+    // }
+    
 }
 
 void follower::file(std::string file_name)
