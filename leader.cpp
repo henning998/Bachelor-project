@@ -129,9 +129,9 @@ void leader::guide_Follower()
     //     motor.set_motor_speed(route_from_nest_to_food.at(i).at(0), route_from_nest_to_food.at(i).at(1));
     //     usleep(route_from_nest_to_food.at(i).back() * 1000000); // From sec to mikrosec.
     // }
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 10; i++)
     {
-        go_straight(tics_from_food_to_nest / 100);
+        go_straight(tics_from_food_to_nest / 10);
         while (true)
         {
             comm.reader();
@@ -232,7 +232,7 @@ void leader::run()
             back_to_nest_again();
             break;
         case TEST:
-            //go_straight(20000);// 20500
+            go_straight(20000);// 20500
             //find_Food();
             run_leader = false;
             break;
