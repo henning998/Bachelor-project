@@ -154,7 +154,7 @@ void leader::back_To_Nest()
     diff_state = CALL_FOLLOWER;
     //usleep(100000);
     log_thread.join();
-    gsl_vector_set_zero(X_Y_Theta); // maybe
+    //gsl_vector_set_zero(X_Y_Theta); // maybe
     position_direction();
     theta = direction_vector();
     usleep(1000000);
@@ -516,6 +516,7 @@ double leader::direction_vector()
     }
 
     theta_param = theta_turn;
+    theta_file.push_back(theta_param);
 
     return theta_turn;
 }
@@ -610,14 +611,20 @@ void leader::file(std::string file_name)
     my_file << "Actual tics moved back: " << param.at(5) * abs(cos(theta_param)) << "\n\n";
 
     my_file << "Leader parameters \n";
-    my_file << "Theta (how much the robot turn): " << theta_param << "\n";
     my_file << "Fear (how much time we fear): " << time_to_fear << "\n";
     my_file << "Wait (How much time we wait before going back): " << time_to_wait << "\n";
 
+    for (int i = 0; i < theta_file.size(); i++)
+    {
+        my_file << "Theta (how much the robot turn): " << i << ": "<< theta_file.at(i) << "\n";
+    }
+
     for (int i = 0; i < route_length.size(); i++)
     {
-        my_file << "Tics from food to nest " << i << ": " << route_length.size() << "\n\n";
+        my_file << "Tics from food to nest " << i << ": " << route_length.at(i) << "\n";
     }
+
+    my_file << "\n";
 
     my_file << "Encoder shift (tics): \n";
     for (int j = 0; j < encode_tics_file.size(); j++)
