@@ -549,6 +549,7 @@ double follower::direction_vector()
     }
 
     theta_param = theta_turn;
+    theta_file.push_back(theta_param);
 
     return theta_turn;
 }
@@ -643,11 +644,15 @@ void follower::file(std::string file_name)
     my_file << "Actual tics moved back: " << param.at(5) * abs(cos(theta_param)) << "\n\n";
 
     my_file << "Follower parameters \n";
-    my_file << "Theta (how much the robot turn): " << theta_param << "\n";
+
+     for (int i = 0; i < theta_file.size(); i++)
+    {
+        my_file << "Theta (how much the robot turn): " << i << ": " << theta_file.at(i) << "\n";
+    }
 
     for (int i = 0; i < route_length.size(); i++)
     {
-        my_file << "Tics from food to nest " << i << ": " << route_length.size() << "\n\n";
+        my_file << "Tics from food to nest " << i << ": " << route_length.at(i) << "\n";
     }
 
     my_file << "Encoder shift (tics): \n";
