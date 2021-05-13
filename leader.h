@@ -69,6 +69,7 @@ private:
     int time_to_fear = 3000000; // 3 seconds
     int time_to_wait = 10000000; // 10 seconds
 
+    void clear();
 public:
     leader();
     ~leader();

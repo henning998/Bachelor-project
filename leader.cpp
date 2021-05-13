@@ -106,19 +106,7 @@ void leader::back_To_Nest()
     usleep(1000000);
     motor.turn(theta);
     usleep(1000000);
-    for (int i = 0; i < left_encoder_tics.size(); i++)
-    {
-        std::vector<int> temp;
-        temp.push_back(left_encoder_tics.at(i));
-        temp.push_back(right_encoder_tics.at(i));
-        encoder_tics.push_back(temp);
-    }
-    encode_tics_file.push_back(encoder_tics);
-    timepoint_file.push_back(timepoint);
-    gsl_vector_set_zero(X_Y_Theta);
-    encoder_values.clear();
-    left_encoder_tics.clear();
-    right_encoder_tics.clear();
+    clear();
     std::thread log_thread(&leader::log_encoder, this);
     //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
@@ -173,19 +161,7 @@ void leader::call_Follower()
 void leader::guide_Follower()
 {
     picam.change2red();
-    for (int i = 0; i < left_encoder_tics.size(); i++)
-    {
-        std::vector<int> temp;
-        temp.push_back(left_encoder_tics.at(i));
-        temp.push_back(right_encoder_tics.at(i));
-        encoder_tics.push_back(temp);
-    }
-    encode_tics_file.push_back(encoder_tics);
-    timepoint_file.push_back(timepoint);
-    gsl_vector_set_zero(X_Y_Theta);
-    encoder_values.clear();
-    left_encoder_tics.clear();
-    right_encoder_tics.clear();
+    clear();
     leader_extra_thread = std::thread(&leader::log_encoder, this);
     // Drive on the logged motor values
     // for (int i = 0; i < route_from_nest_to_food.size(); i++)
@@ -638,4 +614,24 @@ void leader::file(std::string file_name)
         }
         my_file << "\n\n";
     }
+}
+
+
+
+void leader::clear()
+{
+for (int i = 0; i < left_encoder_tics.size(); i++)
+    {
+        std::vector<int> temp;
+        temp.push_back(left_encoder_tics.at(i));
+        temp.push_back(right_encoder_tics.at(i));
+        encoder_tics.push_back(temp);
+    }
+    encode_tics_file.push_back(encoder_tics);
+    timepoint_file.push_back(timepoint);
+    gsl_vector_set_zero(X_Y_Theta);
+    encoder_values.clear();
+    left_encoder_tics.clear();
+    right_encoder_tics.clear();
+    timepoint.clear();
 }

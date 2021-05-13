@@ -161,19 +161,7 @@ void follower::back_To_Nest()
     double theta = direction_vector();
     motor.turn(theta);
     // go_straight(tics_from_food_to_nest);
-    for (int i = 0; i < left_encoder_tics.size(); i++)
-    {
-        std::vector<int> temp;
-        temp.push_back(left_encoder_tics.at(i));
-        temp.push_back(right_encoder_tics.at(i));
-        encoder_tics.push_back(temp);
-    }
-    encode_tics_file.push_back(encoder_tics);
-    timepoint_file.push_back(timepoint);
-    gsl_vector_set_zero(X_Y_Theta);
-    encoder_values.clear();
-    left_encoder_tics.clear();
-    right_encoder_tics.clear();
+    clear();
     std::thread log_thread(&follower::log_encoder, this);
     //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
@@ -224,19 +212,7 @@ void follower::back_To_Food()
     position_direction();
     double theta = direction_vector();
     motor.turn(theta);
-    for (int i = 0; i < left_encoder_tics.size(); i++)
-    {
-        std::vector<int> temp;
-        temp.push_back(left_encoder_tics.at(i));
-        temp.push_back(right_encoder_tics.at(i));
-        encoder_tics.push_back(temp);
-    }
-    encode_tics_file.push_back(encoder_tics);
-    timepoint_file.push_back(timepoint);
-    gsl_vector_set_zero(X_Y_Theta);
-    encoder_values.clear();
-    left_encoder_tics.clear();
-    right_encoder_tics.clear();
+   clear();
     std::thread log_thread(&follower::log_encoder, this);
     //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
@@ -287,19 +263,7 @@ void follower::back_To_Nest_Again()
     position_direction();
     double theta = direction_vector();
     motor.turn(theta);
-    for (int i = 0; i < left_encoder_tics.size(); i++)
-    {
-        std::vector<int> temp;
-        temp.push_back(left_encoder_tics.at(i));
-        temp.push_back(right_encoder_tics.at(i));
-        encoder_tics.push_back(temp);
-    }
-    encode_tics_file.push_back(encoder_tics);
-    timepoint_file.push_back(timepoint);
-    gsl_vector_set_zero(X_Y_Theta);
-    encoder_values.clear();
-    left_encoder_tics.clear();
-    right_encoder_tics.clear();
+    clear();
     std::thread log_thread(&follower::log_encoder, this);
     //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
@@ -666,4 +630,22 @@ void follower::file(std::string file_name)
         }
         my_file << "\n\n";
     }
+}
+
+void follower::clear()
+{
+for (int i = 0; i < left_encoder_tics.size(); i++)
+    {
+        std::vector<int> temp;
+        temp.push_back(left_encoder_tics.at(i));
+        temp.push_back(right_encoder_tics.at(i));
+        encoder_tics.push_back(temp);
+    }
+    encode_tics_file.push_back(encoder_tics);
+    timepoint_file.push_back(timepoint);
+    gsl_vector_set_zero(X_Y_Theta);
+    encoder_values.clear();
+    left_encoder_tics.clear();
+    right_encoder_tics.clear();
+    timepoint.clear();
 }

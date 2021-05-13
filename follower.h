@@ -62,6 +62,8 @@ private:
     void go_straight(int tics_to_go);
     void file(std::string file_name); // Log parameters
 
+    void clear();
+
 public:
     follower();
     ~follower();
