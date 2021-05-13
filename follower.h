@@ -29,6 +29,7 @@ private:
     void log_encoder();
 
     double theta_param = 0.0;
+    std::vector<double> theta_file;
 
     int tics_from_food_to_nest = 0;
 

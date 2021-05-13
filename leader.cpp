@@ -215,7 +215,7 @@ void leader::guide_Follower()
         if (comm.message == "Okay move")
         {
             diff_state = MAKE_ROOM;
-            log_thread.join();
+            //log_thread.join();
             break;
         }
     }
@@ -229,7 +229,7 @@ void leader::make_room()
     float left = 0, right = 0;
     // Calculate how much the blob is to the left/right of the center
     blob_left_right(left, right);
-    std::thread log_thread(&leader::log_encoder, this);
+    //std::thread log_thread(&leader::log_encoder, this);
     motor.fear(left, right, picam.size);
     usleep(time_to_fear);
     motor.stop();
