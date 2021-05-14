@@ -2,12 +2,13 @@
 
 void follower::log_encoder()
 {
+    int state_when_started = diff_state;
     //std::cout << " In log encoder " << std::endl;
     std::vector<std::future<std::vector<int>>> async_vec; // Vector storing promises of vectors
     controller log_data;
     int head = 1, tail = 1;
     std::chrono::_V2::high_resolution_clock::time_point timer = std::chrono::high_resolution_clock::now(); // Create timer to the current instance
-    while (diff_state == FOLLOW)                                                                           // only run this thread when FOLLOW state is active
+    while (diff_state == state_when_started)                                                                           // only run this thread when FOLLOW state is active
     {
         encoder_values.push_back(log_data.get_encode_values());
         if (FLAG_FOR_PUSHING_BACK_ENCODE_VALUE == true)
