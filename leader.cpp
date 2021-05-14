@@ -2,14 +2,16 @@
 
 void leader::log_encoder()
 {
-    bool state_when_started = diff_state;
-    std::cout << " In log encoder " << std::endl;
+    int state_when_started = diff_state;
+    //std::cout << " In log encoder " << std::endl;
     std::vector<std::future<std::vector<int>>> async_vec; // Vector storing promises of vectors
     controller log_data;
     int head = 1, tail = 1;
     std::chrono::_V2::high_resolution_clock::time_point timer = std::chrono::high_resolution_clock::now(); // Create timer to the current instance
+    //std::cout << "Diff state = " << diff_state << std::endl;
     while (diff_state == state_when_started || diff_state == MAKE_ROOM)                                                               //Only run this thread when FOLLOW state is active
     {
+        //std::cout << " im in the while loop " << std::endl;
         encoder_values.push_back(log_data.get_encode_values());
         if (FLAG_FOR_PUSHING_BACK_ENCODE_VALUE == true)
         {
@@ -31,6 +33,7 @@ void leader::log_encoder()
         left_encoder_tics.push_back(temp.at(0));
         right_encoder_tics.push_back(temp.at(1));
     }
+    //std::cout << "left encoder tics " << left_encoder_tics.size();
 }
 
 std::vector<int> leader::tic_count(int tail, int head)
@@ -70,7 +73,6 @@ void leader::find_Food()
     while (true)
     {
         picam.getpicture();
-        cv::waitKey(27);
         float left = 0, right = 0;
         // Calculate how much the blob is to the left/right of the center
         blob_left_right(left, right);
@@ -147,6 +149,8 @@ void leader::back_To_Nest()
     theta = direction_vector();
     usleep(1000000);
     motor.turn(theta);
+    usleep(1000000);
+    clear();
 }
 void leader::call_Follower()
 {
@@ -161,7 +165,6 @@ void leader::call_Follower()
 void leader::guide_Follower()
 {
     picam.change2red();
-    clear();
     leader_extra_thread = std::thread(&leader::log_encoder, this);
     // Drive on the logged motor values
     // for (int i = 0; i < route_from_nest_to_food.size(); i++)
@@ -171,6 +174,7 @@ void leader::guide_Follower()
     // }
     for (int i = 0; i < 10; i++)
     {
+        //go_straight(2000);
         go_straight(tics_from_food_to_nest / 10);
         FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
         while (true)
@@ -190,7 +194,7 @@ void leader::guide_Follower()
         comm.reader();
         if (comm.message == "Okay move")
         {
-            diff_state = MAKE_ROOM;
+             diff_state = MAKE_ROOM;
             //log_thread.join();
             break;
         }
@@ -201,7 +205,6 @@ void leader::make_room()
 {
     picam.change2red();
     picam.getpicture();
-    cv::waitKey(27);
     float left = 0, right = 0;
     // Calculate how much the blob is to the left/right of the center
     blob_left_right(left, right);
@@ -209,11 +212,11 @@ void leader::make_room()
     motor.fear(left, right, picam.size);
     usleep(time_to_fear);
     motor.stop();
+    usleep(1000000);
     FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
     diff_state = BACK_TO_NEST_AGAIN;
-    
     leader_extra_thread.join();
-    
+    usleep(1000000);
     position_direction();
     double theta = direction_vector();
     motor.turn(theta);
@@ -434,9 +437,10 @@ void leader::set_icc(gsl_vector &ICC, int i)
 
 void leader::position_direction()
 {
-    // std::cout << "X_Y_Theta, x: " << gsl_vector_get(X_Y_Theta, 0) << std::endl;
-    // std::cout << "X_Y_Theta, y: " << gsl_vector_get(X_Y_Theta, 1) << std::endl;
-    // std::cout << "X_Y_Theta, theta: " << gsl_vector_get(X_Y_Theta, 2) << std::endl;
+    //std::cout << "X_Y_Theta, x: " << gsl_vector_get(X_Y_Theta, 0) << std::endl;
+    //std::cout << "X_Y_Theta, y: " << gsl_vector_get(X_Y_Theta, 1) << std::endl;
+    //std::cout << "X_Y_Theta, theta: " << gsl_vector_get(X_Y_Theta, 2) << std::endl;
+    //std::cout << "Left encoder tics size: " << left_encoder_tics.size() << std::endl;
     gsl_matrix *rotation_matrix = gsl_matrix_alloc(3, 3);
     gsl_vector *translation = gsl_vector_alloc(3);
     gsl_vector *ICC = gsl_vector_alloc(3);
@@ -463,9 +467,9 @@ void leader::position_direction()
 
         gsl_blas_dgemv(CblasNoTrans, 1.0, rotation_matrix, translation, 0, X_Y_Theta);
         gsl_blas_daxpy(1.0, ICC, X_Y_Theta);
-        // std::cout << "X_Y_Theta, x: " << gsl_vector_get(X_Y_Theta, 0) << std::endl;
-        // std::cout << "X_Y_Theta, y: " << gsl_vector_get(X_Y_Theta, 1) << std::endl;
-        // std::cout << "X_Y_Theta, theta: " << gsl_vector_get(X_Y_Theta, 2) << std::endl;
+         //std::cout << "X_Y_Theta, x: " << gsl_vector_get(X_Y_Theta, 0) << std::endl;
+         //std::cout << "X_Y_Theta, y: " << gsl_vector_get(X_Y_Theta, 1) << std::endl;
+         //std::cout << "X_Y_Theta, theta: " << gsl_vector_get(X_Y_Theta, 2) << std::endl;
     }
     gsl_matrix_free(rotation_matrix);
     gsl_vector_free(translation);
