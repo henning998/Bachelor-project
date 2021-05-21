@@ -19,7 +19,7 @@ private:
         BACK_TO_NEST,
         BACK_TO_FOOD,
         BACK_TO_NEST_AGAIN,
-        HOOKED_ON_A_FEELING
+        END
     };
     state diff_state = GETTING_READY;                         // Set start state
     std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
@@ -79,16 +79,8 @@ public:
     void back_To_Nest_Again();
     //Main loop that keep track of all states
     void run();
-    //Get the logged data
-    //void get_logging();
-    //Print the logged data
-    //void printlog();
-    //Take the logged data and reverse it
-    //void reverse_Motor_values();
     // calculate left and right
     void blob_left_right(float &left, float &right);
-    //Dance party
-    void hooked_On_A_Feeling();
 };
 
 #endif

@@ -1,5 +1,5 @@
 # Bachelor-project
-Robot collaborative navigationinspired by tandem runningbehaviour in ants
+Robot collaborative navigation inspired by tandem runningbehaviour in ants
 
 ## How to run the code on both robots:
 ### Leader:
@@ -17,7 +17,7 @@ main:
 
 ### Run the code:
 First run the follower robot. Reason to run the follower robot first is due to it being the server
-Second run the leader robot. 
+Secondly run the leader robot. 
 
 ## Requirements:
 To run this code you need the following:
@@ -28,3 +28,10 @@ Having opencv installed (version 2 or higher)
 
 Optional if visual studio code is used:
 Have cmake tools and cmake (version 3.0.0) installed
+
+## Remember:
+Braitenberg.h:
+The value turn_tic is different for robot 01 and robot 08, change the value accordingly
+
+follower.cpp/leader.cpp
+Depending on which of the two robots (robot 01 and 08) that is follower or leader, the PWM_factor variable need to be changed accordingly

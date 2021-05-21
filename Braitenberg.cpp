@@ -30,11 +30,28 @@ void Braitenberg::love(float left, float right, float dist, bool log) // Input b
 }
 
 //Fear left sensor -> (+) left motor , right sensor -> (+) right motor
-void Braitenberg::fear(float left, float right, float dist, bool log) // Input between 0-1
+void Braitenberg::fear(float left, float right, float dist, bool log) // Input between 0-1. Fear logic got changed, it is not a Braitenberg fear, 
+                                                                      // but rather just a hardcode "fear" behaviour to get the leader away from the red can (food source)
 {
+    if(left == 0 && right == 0 )
+    {
+        left = 0.9;
+    }
+    std::cout << "left " << left << std::endl;
     float SpeedL, SpeedR;
-    SpeedL = (left * MaxSpeed) * centerWeight + (dist * MaxSpeed) * distWeight;
+    if (right == 0)
+    {
+    SpeedL = 10*(left * MaxSpeed) * centerWeight + (dist * MaxSpeed) * distWeight;
     SpeedR = (right * MaxSpeed) * centerWeight + (dist * MaxSpeed) * distWeight;
+    }
+    else
+    {
+        
+    SpeedL = 10*(left * MaxSpeed) * centerWeight + (dist * MaxSpeed) * distWeight;
+    SpeedR = (right * MaxSpeed) * centerWeight + (dist * MaxSpeed) * distWeight;
+    }
+    
+    
     if (SpeedR < MinSpeed)
     {
         SpeedR = MinSpeed;
@@ -82,9 +99,10 @@ void Braitenberg::agression(float left, float right, float dist) // Input betwee
 
 void Braitenberg::turn(double theta)
 {
-    std::cout << "theta:" << theta << std::endl;
+    //std::cout << "theta:" << theta << std::endl;
+
     int tic = (turn_tic / M_PI) * (abs(theta)) ; //radians to tics to turn
-    std::cout << " tic " << tic << std::endl;
+    //std::cout << " tic " << tic << std::endl;
 
     //Turn to the right
     int tics_r = 0, tics_l = 0;
@@ -150,7 +168,7 @@ void Braitenberg::turn(double theta)
         //std::cout << "tics_l: " << tics_l << " & tics_r: " << tics_r << std::endl;
     }
     usleep(1000000);
-    if (theta > M_PI / 2 || theta < -M_PI/2) // NEED TO CHECK IF - SHOULD BE THERE OR NOT
+    if (theta > M_PI / 2 || theta < -M_PI/2)
     {
         tic = tic_moveback * abs(cos(theta));
     }
@@ -159,7 +177,7 @@ void Braitenberg::turn(double theta)
         tic = 0;
     }
     tics_r = 0, tics_l = 0;
-    double PWM_change_factor = 0.01;
+    double PWM_change_factor = 0.02;
     last_run = Motor.get_encode_values();
     while (tics_r <= tic || tics_l <= tic) 
     {

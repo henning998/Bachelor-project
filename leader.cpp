@@ -9,7 +9,7 @@ void leader::log_encoder()
     int head = 1, tail = 1;
     std::chrono::_V2::high_resolution_clock::time_point timer = std::chrono::high_resolution_clock::now(); // Create timer to the current instance
     //std::cout << "Diff state = " << diff_state << std::endl;
-    while (diff_state == state_when_started || diff_state == MAKE_ROOM)                                                               //Only run this thread when FOLLOW state is active
+    while (diff_state == state_when_started || diff_state == MAKE_ROOM) //Only run this thread when FOLLOW state is active
     {
         //std::cout << " im in the while loop " << std::endl;
         encoder_values.push_back(log_data.get_encode_values());
@@ -81,8 +81,6 @@ void leader::find_Food()
         if (picam.size > 0.85) // When the robot is close enough to the blob
         {
             motor.stop();
-            // get_logging();
-            //printlog();
             diff_state = BACK_TO_NEST;
             usleep(100000);
             log_thread.join();
@@ -110,7 +108,6 @@ void leader::back_To_Nest()
     usleep(1000000);
     clear();
     std::thread log_thread(&leader::log_encoder, this);
-    //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
     {
         if (i < 3)
@@ -133,6 +130,7 @@ void leader::back_To_Nest()
                     motor.love(left, right, picam.size);
                     FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
                 }
+                motor.stop();
             }
             else
             {
@@ -142,9 +140,7 @@ void leader::back_To_Nest()
         }
     }
     diff_state = CALL_FOLLOWER;
-    //usleep(100000);
     log_thread.join();
-    //gsl_vector_set_zero(X_Y_Theta); // maybe
     position_direction();
     theta = direction_vector();
     usleep(1000000);
@@ -166,23 +162,60 @@ void leader::guide_Follower()
 {
     picam.change2red();
     leader_extra_thread = std::thread(&leader::log_encoder, this);
-    // Drive on the logged motor values
-    // for (int i = 0; i < route_from_nest_to_food.size(); i++)
-    // {
-    //     motor.set_motor_speed(route_from_nest_to_food.at(i).at(0), route_from_nest_to_food.at(i).at(1));
-    //     usleep(route_from_nest_to_food.at(i).back() * 1000000); // From sec to mikrosec.
-    // }
     for (int i = 0; i < 10; i++)
     {
-        //go_straight(2000);
-        go_straight(tics_from_food_to_nest / 10);
-        FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
-        while (true)
+        if (i < 2)
         {
-            comm.reader();
-            if (comm.message == "Keep true")
+
+            go_straight(tics_from_food_to_nest / 10);
+            FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
+            while (true)
             {
-                break;
+                comm.reader();
+                if (comm.message == "Keep true")
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            picam.getpicture();
+            if (picam.new_pic)
+            {
+                while (picam.size < 0.85)
+                {
+                    i = 10; // break the for loop, when whille loop is complete
+                    picam.getpicture();
+                    float left = 0, right = 0;
+                    // Calculate how much the blob is to the left/right of the center
+                    blob_left_right(left, right);
+                    motor.love(left, right, picam.size);
+                    usleep(500000);
+                    motor.stop();
+                    FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
+                    while (true)
+                    {
+                        comm.reader();
+                        if (comm.message == "Keep true")
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                go_straight(tics_from_food_to_nest / 10);
+                FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
+                while (true)
+                {
+                    comm.reader();
+                    if (comm.message == "Keep true")
+                    {
+                        break;
+                    }
+                }
             }
         }
     }
@@ -194,8 +227,7 @@ void leader::guide_Follower()
         comm.reader();
         if (comm.message == "Okay move")
         {
-             diff_state = MAKE_ROOM;
-            //log_thread.join();
+            diff_state = MAKE_ROOM;
             break;
         }
     }
@@ -204,22 +236,15 @@ void leader::guide_Follower()
 void leader::make_room()
 {
     picam.change2red();
-    picam.getpicture();
-    float left = 0, right = 0;
-    // Calculate how much the blob is to the left/right of the center
-    blob_left_right(left, right);
-    //std::thread log_thread(&leader::log_encoder, this);
-    motor.fear(left, right, picam.size);
+    motor.turn(M_PI_2);
+    go_straight(5000);
     usleep(time_to_fear);
     motor.stop();
     usleep(1000000);
     FLAG_FOR_PUSHING_BACK_ENCODE_VALUE = true;
-    diff_state = BACK_TO_NEST_AGAIN;
+    diff_state = END;
     leader_extra_thread.join();
     usleep(1000000);
-    position_direction();
-    double theta = direction_vector();
-    motor.turn(theta);
     comm.writing("I have moved");
     for (int i = 0; i < left_encoder_tics.size(); i++)
     {
@@ -236,7 +261,6 @@ void leader::make_room()
 void leader::back_to_nest_again()
 {
     picam.change2blue();
-    //go_straight(tics_from_food_to_nest);
 
     for (int i = 0; i < 10; i++)
     {
@@ -266,31 +290,8 @@ void leader::back_to_nest_again()
         }
     }
 
-    //reverse_Motor_values();
-    // Drive on the logged motor values
-    // for (int i = 0; i < route_from_food_to_nest.size(); i++)
-    // {
-    //     motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
-    //     usleep(route_from_food_to_nest.at(i).back() * 1000000); // from sec to mikrosec.
-    // }
-    diff_state = TEST;
+    diff_state = END;
 }
-
-// void leader::get_logging()
-// {
-//     route_from_nest_to_food = motor.get_logging();
-// }
-// void leader::printlog()
-// {
-//     for (int i = 0; i < route_from_nest_to_food.size(); i++)
-//     {
-//         for (int j = 0; j < route_from_nest_to_food.at(i).size(); j++)
-//         {
-//             std::cout << route_from_nest_to_food.at(i).at(j) << " ";
-//         }
-//         std::cout << std::endl;
-//     }
-// }
 
 void leader::run()
 {
@@ -316,10 +317,8 @@ void leader::run()
         case BACK_TO_NEST_AGAIN:
             back_to_nest_again();
             break;
-        case TEST:
-            file("/home/pi/HenningCasper/leader10.txt");
-            //go_straight(20000); // 20500
-            //find_Food();
+        case END:
+            file("/home/pi/HenningCasper/leader12.txt");
             run_leader = false;
             break;
         default:
@@ -328,40 +327,17 @@ void leader::run()
     }
 }
 
-// void leader::reverse_Motor_values()
-// {
-//     route_from_food_to_nest = route_from_nest_to_food;
-//     std::vector<double> temp = route_from_food_to_nest.back();
-//     route_from_food_to_nest.pop_back();
-//     for (int i = 0; i < route_from_food_to_nest.size(); i++)
-//     {
-//         std::swap(route_from_food_to_nest[i][0], route_from_food_to_nest[i][1]);
-//     }
-
-//     std::reverse(route_from_food_to_nest.begin(), route_from_food_to_nest.end());
-//     route_from_food_to_nest.push_back(temp);
-
-//     for (int i = 0; i < route_from_food_to_nest.size(); i++)
-//     {
-//         for (int j = 0; j < route_from_food_to_nest.at(i).size(); j++)
-//         {
-//             //   std::cout << route_from_food_to_nest.at(i).at(j) << " ";
-//         }
-//         // std::cout << std::endl;
-//     }
-// }
-
 void leader::blob_left_right(float &left, float &right)
 {
-    if (picam.x < 150)
+    if (picam.x < 160)
     {
-        left = (150 - picam.x) / 150;
+        left = (160 - picam.x) / 160;
         right = 0;
     }
-    if (picam.x > 170)
+    if (picam.x > 160)
     {
         left = 0;
-        right = (picam.x - 170) / 150;
+        right = (picam.x - 160) / 160;
     }
 }
 
@@ -467,9 +443,9 @@ void leader::position_direction()
 
         gsl_blas_dgemv(CblasNoTrans, 1.0, rotation_matrix, translation, 0, X_Y_Theta);
         gsl_blas_daxpy(1.0, ICC, X_Y_Theta);
-         //std::cout << "X_Y_Theta, x: " << gsl_vector_get(X_Y_Theta, 0) << std::endl;
-         //std::cout << "X_Y_Theta, y: " << gsl_vector_get(X_Y_Theta, 1) << std::endl;
-         //std::cout << "X_Y_Theta, theta: " << gsl_vector_get(X_Y_Theta, 2) << std::endl;
+        //std::cout << "X_Y_Theta, x: " << gsl_vector_get(X_Y_Theta, 0) << std::endl;
+        //std::cout << "X_Y_Theta, y: " << gsl_vector_get(X_Y_Theta, 1) << std::endl;
+        //std::cout << "X_Y_Theta, theta: " << gsl_vector_get(X_Y_Theta, 2) << std::endl;
     }
     gsl_matrix_free(rotation_matrix);
     gsl_vector_free(translation);
@@ -505,12 +481,12 @@ double leader::direction_vector()
 void leader::go_straight(int tics_to_go)
 {
     float min_speed = motor.parameters().at(1);
-    double PWM_change_factor = 0.01; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
+    double PWM_change_factor = 0.005; // 0.1 if robot 01, 0.005 if robot 08
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();
     std::vector<double> time;
-    while (tics_r <= tics_to_go || tics_l <= tics_to_go) //4523
+    while (tics_r <= tics_to_go || tics_l <= tics_to_go)
     {
         std::chrono::time_point<std::chrono::system_clock> start, end;
         start = std::chrono::system_clock::now();
@@ -570,7 +546,6 @@ void leader::go_straight(int tics_to_go)
         double time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(start - end).count();
         time.push_back(time_elapsed);
         //std::cout << "time_elapsed " << time_elapsed << std::endl;
-        //usleep(5);
     }
     // for (int i = 0; i < time.size(); i++)
     // {
@@ -620,11 +595,9 @@ void leader::file(std::string file_name)
     }
 }
 
-
-
 void leader::clear()
 {
-for (int i = 0; i < left_encoder_tics.size(); i++)
+    for (int i = 0; i < left_encoder_tics.size(); i++)
     {
         std::vector<int> temp;
         temp.push_back(left_encoder_tics.at(i));

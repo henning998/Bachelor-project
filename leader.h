@@ -21,7 +21,7 @@ private:
         GUIDE_FOLLOWER,
         MAKE_ROOM,
         BACK_TO_NEST_AGAIN,
-        TEST
+        END
     };
     state diff_state = FIND_FOOD; // Set start state 
     // std::vector<std::vector<double>> route_from_nest_to_food; // Logged route from nest to food
@@ -87,17 +87,9 @@ public:
     void back_to_nest_again();
     //Main loop controlling all states leader robot can go into
     void run();
-    //Getting the loggged data
-    //  void get_logging();
-    //Printing the logged data
-    // void printlog();
-    //Takes the logged route to food and reverse it
-    // void reverse_Motor_values();
     // calculate left and right
     void blob_left_right(float &left, float &right);
     void file(std::string file_name);
-    //Dance party
-    void hooked_on_a_feeling();
 };
 
 #endif

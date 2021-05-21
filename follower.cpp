@@ -161,10 +161,8 @@ void follower::back_To_Nest()
     position_direction();
     double theta = direction_vector();
     motor.turn(theta);
-    // go_straight(tics_from_food_to_nest);
     clear();
     std::thread log_thread(&follower::log_encoder, this);
-    //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
     {
         if (i < 3)
@@ -195,14 +193,6 @@ void follower::back_To_Nest()
             }
         }
     }
-
-    //reverse_Motor_values();
-    // Drive on the logged motor values
-    // for (int i = 0; i < route_from_food_to_nest.size(); i++)
-    // {
-    //     motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
-    //     usleep(route_from_food_to_nest.at(i).back() * 1000000); // from sec to mikrosec.
-    // }
     diff_state = BACK_TO_FOOD;
     log_thread.join();
 }
@@ -213,9 +203,8 @@ void follower::back_To_Food()
     position_direction();
     double theta = direction_vector();
     motor.turn(theta);
-   clear();
+    clear();
     std::thread log_thread(&follower::log_encoder, this);
-    //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
     {
         if (i < 3)
@@ -246,14 +235,6 @@ void follower::back_To_Food()
             }
         }
     }
-
-    //go_straight(tics_from_food_to_nest);
-    // Drive on the logged motor values
-    // for (int i = 0; i < route_from_nest_to_food.size(); i++)
-    // {
-    //     motor.set_motor_speed(route_from_nest_to_food.at(i).at(0), route_from_nest_to_food.at(i).at(1));
-    //     usleep(route_from_nest_to_food.at(i).back() * 1000000); // from sec to mikrosec.
-    // }
     diff_state = BACK_TO_NEST_AGAIN;
     log_thread.join();
 }
@@ -266,7 +247,6 @@ void follower::back_To_Nest_Again()
     motor.turn(theta);
     clear();
     std::thread log_thread(&follower::log_encoder, this);
-    //go_straight(tics_from_food_to_nest);
     for (int i = 0; i < 10; i++)
     {
         if (i < 3)
@@ -297,15 +277,7 @@ void follower::back_To_Nest_Again()
             }
         }
     }
-
-    // reverse_Motor_values();
-    // // Drive on the logged motor values
-    // for (int i = 0; i < route_from_food_to_nest.size(); i++)
-    // {
-    //     motor.set_motor_speed(route_from_food_to_nest.at(i).at(0), route_from_food_to_nest.at(i).at(1));
-    //     usleep(route_from_food_to_nest.at(i).back() * 1000000); // from sec to mikrosec.
-    // }
-    diff_state = HOOKED_ON_A_FEELING;
+    diff_state = END;
     log_thread.join();
 }
 
@@ -330,7 +302,7 @@ void follower::run()
         case BACK_TO_NEST_AGAIN:
             back_To_Nest_Again();
             break;
-        case HOOKED_ON_A_FEELING:
+        case END:
             file("/home/pi/HenningCasper/follower10.txt");
             follower_run = false;
             break;
@@ -340,45 +312,17 @@ void follower::run()
     }
 }
 
-// void follower::get_logging()
-// {
-//     route_from_nest_to_food = motor.get_logging();
-// }
-
-// void follower::reverse_Motor_values()
-// {
-//     route_from_food_to_nest = route_from_nest_to_food;
-//     std::vector<double> temp = route_from_food_to_nest.back();
-//     route_from_food_to_nest.pop_back();
-//     for (int i = 0; i < route_from_food_to_nest.size(); i++)
-//     {
-//         std::swap(route_from_food_to_nest[i][0], route_from_food_to_nest[i][1]);
-//     }
-
-//     std::reverse(route_from_food_to_nest.begin(), route_from_food_to_nest.end());
-//     route_from_food_to_nest.push_back(temp);
-
-//     for (int i = 0; i < route_from_food_to_nest.size(); i++)
-//     {
-//         for (int j = 0; j < route_from_food_to_nest.at(i).size(); j++)
-//         {
-//             std::cout << route_from_food_to_nest.at(i).at(j) << " ";
-//         }
-//         std::cout << std::endl;
-//     }
-// }
-
 void follower::blob_left_right(float &left, float &right)
 {
-    if (picam.x < 150)
+    if (picam.x < 160)
     {
-        left = (150 - picam.x) / 150;
+        left = (160 - picam.x) / 160;
         right = 0;
     }
-    if (picam.x > 170)
+    if (picam.x > 160)
     {
         left = 0;
-        right = (picam.x - 170) / 150;
+        right = (picam.x - 160) / 160;
     }
 }
 
@@ -522,12 +466,12 @@ double follower::direction_vector()
 void follower::go_straight(int tics_to_go)
 {
     float min_speed = motor.parameters().at(1);
-    double PWM_change_factor = 0.04275; //test 08: 0.1, 0.05, 0.01, 0.005, 0.5
+    double PWM_change_factor = 0.1; // 0.1 if robot 01, 0.005 if robot 08
     int tics_r = 0, tics_l = 0;
     controller log_encode;
     std::vector<int> last_run = log_encode.get_encode_values();
     std::vector<double> time;
-    while (tics_r <= tics_to_go || tics_l <= tics_to_go) //4523
+    while (tics_r <= tics_to_go || tics_l <= tics_to_go)
     {
         std::chrono::time_point<std::chrono::system_clock> start, end;
         start = std::chrono::system_clock::now();
@@ -587,7 +531,6 @@ void follower::go_straight(int tics_to_go)
         double time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(start - end).count();
         time.push_back(time_elapsed);
         //std::cout << "time_elapsed " << time_elapsed << std::endl;
-        //usleep(5);
     }
     // for (int i = 0; i < time.size(); i++)
     // {

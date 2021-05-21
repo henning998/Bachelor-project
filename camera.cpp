@@ -171,7 +171,7 @@ void camera::change2blue()
 	iLowS = 110;
 	iHighS = 230;
 
-	iLowV = 0;
+	iLowV = 60;
 	iHighV = 255;
 }
 

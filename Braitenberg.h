@@ -8,11 +8,12 @@ class Braitenberg
 private:
     controller Motor;         // Controller object
     int MaxSpeed = 90;        // Variable to adjust max speed
-    int MinSpeed = 65;      // Variable to adjust min speed , 65
-    float centerWeight = 0.3; // Weight for adjusting the importance of the blob being centered 0,45
-    float distWeight = 0.3;   // Weight for adjusting the importance of the distance to the blob 0,2
-    int turn_tic = 3630;
+    int MinSpeed = 65;        // Variable to adjust min speed
+    float centerWeight = 0.3; // Weight for adjusting the importance of the blob being centered
+    float distWeight = 0.3;   // Weight for adjusting the importance of the distance to the blob
+    int turn_tic = 3630;      // For robot 08 turn_tic = 3630, for robot 01 turn_tic = 3680
     int tic_moveback = 2193;
+
 public:
     Braitenberg();
     ~Braitenberg();
