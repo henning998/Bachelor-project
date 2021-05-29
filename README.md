@@ -31,7 +31,7 @@ Have cmake tools and cmake (version 3.0.0) installed
 
 ## Remember:
 Braitenberg.h:
-The value turn_tic is different for robot 01 and robot 08, change the value accordingly
+The value turn_tic is different for follower and leader, change the value accordingly
 
 follower.cpp/leader.cpp
-Depending on which of the two robots (robot 01 and 08) that is follower or leader, the PWM_factor variable need to be changed accordingly
+Depending on which of the two robots that is follower or leader, the PWM_factor variable need to be changed accordingly
